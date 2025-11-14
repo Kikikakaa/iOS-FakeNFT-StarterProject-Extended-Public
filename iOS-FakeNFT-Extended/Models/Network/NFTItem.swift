@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 struct NFTItem: Codable, Identifiable {
     let createdAt: String?
@@ -14,12 +15,18 @@ struct NFTItem: Codable, Identifiable {
     var imageUrl: String {
         images.first ?? ""
     }
-
+    
     var priceETH: String {
         String(format: "%.2f ETH", price)
     }
-
-    var ratingStars: String {
-        String(repeating: "★", count: rating) + String(repeating: "☆", count: 5 - rating)
+    
+    var ratingStars: some View {
+        HStack(spacing: 3) {
+            ForEach(0..<5) { index in
+                Image(index < rating ? "done" : "noActive")
+                    .resizable()
+                    .frame(width: 12, height: 12)
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class CartViewModel: ObservableObject {
     @Published var cartItems: [NFTItem] = []
+    @Published var cartItemsCount: Int = 0
     @Published var total: Double = 0.0
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -37,7 +38,7 @@ final class CartViewModel: ObservableObject {
             self.cartItems = order.nfts.compactMap { id in
                 nftItems.first { $0.id == id }
             }
-
+            self.cartItemsCount = cartItems.count
             // 4. Считаем total
             self.total = cartItems.reduce(0) { $0 + $1.price }
 
@@ -61,6 +62,7 @@ final class CartViewModel: ObservableObject {
             )
 
             cartItems.remove(at: index)
+            self.cartItemsCount = cartItems.count
             total = cartItems.reduce(0) { $0 + $1.price }
 
         } catch {
@@ -77,10 +79,32 @@ final class CartViewModel: ObservableObject {
                 request: UpdateOrderRequest(nfts: [])
             )
             cartItems = []
+            cartItemsCount = 0
             total = 0
         } catch {
             errorMessage = "Ошибка очистки"
         }
         isLoading = false
+    }
+}
+
+extension CartViewModel {
+    enum ViewState {
+        case loading
+        case error(String)
+        case empty
+        case content(items: [NFTItem], total: Double)
+    }
+
+    var state: ViewState {
+        if isLoading {
+            return .loading
+        } else if let error = errorMessage {
+            return .error(error)
+        } else if cartItems.isEmpty {
+            return .empty
+        } else {
+            return .content(items: cartItems, total: total)
+        }
     }
 }

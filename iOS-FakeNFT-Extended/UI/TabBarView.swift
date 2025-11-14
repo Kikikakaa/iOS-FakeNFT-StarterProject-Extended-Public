@@ -10,14 +10,16 @@ struct TabBarView: View {
                         systemImage: "square.stack.3d.up.fill"
                     )
                 }
-            CartListView()
-                .tabItem {
-                    Label(
-                        NSLocalizedString("Tab.cart", comment: ""),
-                        systemImage: "square.stack.3d.up.fill"
-                    )
-                }
-                .backgroundStyle(.background)
+            NavigationStack {
+                CartListView()
+            }
+            .tabItem {
+                Label(
+                    NSLocalizedString("Tab.cart", comment: ""),
+                    systemImage: "basket"
+                )
+            }
+            .backgroundStyle(.background)
         }
     }
 }
