@@ -17,10 +17,9 @@ final class CartViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            // 1. Получаем корзину
+
             let order: OrderResponse = try await client.send(request: GetOrderRequest())
 
-            // 2. Загружаем NFT параллельно
             let nftItems = try await withThrowingTaskGroup(of: NFTItem.self) { group in
                 for nftId in order.nfts {
                     group.addTask {
@@ -34,12 +33,11 @@ final class CartViewModel: ObservableObject {
                 return results
             }
 
-            // 3. Сохраняем порядок из корзины
             self.cartItems = order.nfts.compactMap { id in
                 nftItems.first { $0.id == id }
             }
             self.cartItemsCount = cartItems.count
-            // 4. Считаем total
+
             self.total = cartItems.reduce(0) { $0 + $1.price }
 
         } catch {
@@ -73,7 +71,6 @@ final class CartViewModel: ObservableObject {
                 throw URLError(.badServerResponse)
             }
 
-            // Успешно — обновляем UI
             cartItems.remove(at: index)
             cartItemsCount = cartItems.count
             total = cartItems.reduce(0) { $0 + $1.price }

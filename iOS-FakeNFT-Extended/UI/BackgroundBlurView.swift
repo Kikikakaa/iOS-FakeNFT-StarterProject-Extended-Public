@@ -7,6 +7,5 @@ struct BackgroundBlurView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
-        // Ничего не делаем
     }
 }

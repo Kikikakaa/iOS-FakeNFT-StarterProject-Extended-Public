@@ -1,4 +1,3 @@
-// CartItemRow.swift
 import SwiftUI
 import Kingfisher
 

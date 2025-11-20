@@ -42,6 +42,7 @@ struct CartListView: View {
                 }
             }
         }
+        .toolbar(itemToDelete != nil ? .hidden : .visible, for: .navigationBar, .tabBar)
         .task { await vm.loadCart() }
         .overlay(loadingOverlay, alignment: .center)
         .overlay(errorOverlay, alignment: .center)
@@ -82,7 +83,7 @@ struct CartListView: View {
             .font(.bodyBold)
             .foregroundColor(.white)
             .frame(maxWidth: .infinity, minHeight: 44)
-            .background(Color.black)
+            .background(.ypBlack)
             .cornerRadius(16)
         }
         .padding(.horizontal)
@@ -123,34 +124,29 @@ struct CartListView: View {
     private var deleteOverlay: some View {
         if let item = itemToDelete {
             ZStack {
-                // Размытие корзины под экраном подтверждения
                 Rectangle()
                     .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
 
-                VStack(spacing: 24) {
+                VStack(spacing: 12) {
 
-                    // NFT картинка
                     if let url = URL(string: item.imageUrl) {
                         AsyncImage(url: url) { img in
                             img.resizable().scaledToFit()
                         } placeholder: {
                             ProgressView()
                         }
-                        .frame(maxWidth: 220)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .frame(maxWidth: 108)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
-                    // Текст вопроса
                     Text("Вы уверены, что хотите\nудалить объект из корзины?")
                         .multilineTextAlignment(.center)
-                        .font(.headline)
+                        .font(.caption2)
                         .foregroundColor(.primary)
+                        .padding(.bottom, 8)
 
-                    // КНОПКИ
-                    HStack(spacing: 16) {
-
-                        // ❌ Удалить
+                    HStack(spacing: 8) {
                         Button {
                             Task {
                                 await vm.removeItem(item.id)
@@ -159,22 +155,21 @@ struct CartListView: View {
                         } label: {
                             Text("Удалить")
                                 .foregroundColor(.red)
-                                .font(.body.bold())
-                                .frame(maxWidth: .infinity, minHeight: 44)
-                                .background(Color.black)
-                                .cornerRadius(14)
+                                .font(.bodyRegular)
+                                .frame(maxWidth: 127, minHeight: 44)
+                                .background(.ypBlack)
+                                .cornerRadius(12)
                         }
 
-                        // ➡️ Вернуться
                         Button {
                             itemToDelete = nil
                         } label: {
                             Text("Вернуться")
                                 .foregroundColor(.white)
-                                .font(.body.bold())
-                                .frame(maxWidth: .infinity, minHeight: 44)
-                                .background(Color.black)
-                                .cornerRadius(14)
+                                .font(.bodyRegular)
+                                .frame(maxWidth: 127, minHeight: 44)
+                                .background(.ypBlack)
+                                .cornerRadius(12)
                         }
                     }
                     .padding(.horizontal)
@@ -182,11 +177,8 @@ struct CartListView: View {
                 .padding()
             }
             .transition(.opacity)
-           // .animation(.easeInOut, value: itemToDelete)
         }
     }
-
-    
 }
 
 #Preview {
