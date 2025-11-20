@@ -8,6 +8,7 @@ final class CartViewModel: ObservableObject {
     @Published var total: Double = 0.0
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var sortOption: SortOption? = nil
 
     private let client = DefaultNetworkClient()
     private let orderId = "1"
@@ -114,6 +115,29 @@ extension CartViewModel {
             return .empty
         } else {
             return .content(items: cartItems, total: total)
+        }
+    }
+}
+
+enum SortOption: String, CaseIterable {
+    case priceAscending = "По цене"
+    case rating = "По рейтингу"
+    case name = "По названию"
+    
+    var title: String { rawValue }
+}
+
+extension CartViewModel {
+    var sortedCartItems: [NFTItem] {
+        switch sortOption {
+        case .priceAscending:
+            return cartItems.sorted { $0.price < $1.price }
+        case .rating:
+            return cartItems.sorted { ($0.rating ?? 0) > ($1.rating ?? 0) }
+        case .name:
+            return cartItems.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .none:
+            return cartItems
         }
     }
 }

@@ -20,7 +20,7 @@ struct NFTItem: Codable, Identifiable {
     }
     
     var ratingStars: some View {
-        HStack(spacing: UIConstants.Rating.spacing) {
+        HStack(spacing: UIConstants.Rating.starSpacing) {
             ForEach(0..<5) { index in
                 let star: ImageResource = index < rating ? .done : .noActive
 

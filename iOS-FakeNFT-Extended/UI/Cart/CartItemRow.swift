@@ -8,10 +8,10 @@ struct CartItemRow: View {
     var body: some View {
         HStack {
             KFImage(URL(string: item.imageUrl))
-                .placeholder { Color.gray.frame(width: 108, height: 108) }
+                .placeholder { Color.gray.frame(width: UIConstants.nftImageWidthHeight, height: UIConstants.nftImageWidthHeight) }
                 .resizable()
                 .scaledToFill()
-                .frame(width: 108, height: 108)
+                .frame(width: UIConstants.nftImageWidthHeight, height: UIConstants.nftImageWidthHeight)
                 .clipped()
                 .cornerRadius(12)
 

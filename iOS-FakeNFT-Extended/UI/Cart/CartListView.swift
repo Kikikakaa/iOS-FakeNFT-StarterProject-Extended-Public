@@ -16,7 +16,7 @@ struct CartListView: View {
                             if vm.cartItems.isEmpty {
                                 emptyState
                             } else {
-                                ForEach(vm.cartItems) { item in
+                                ForEach(vm.sortedCartItems) { item in
                                     CartItemRow(item: item) {
                                         itemToDelete = item
                                     }
@@ -34,11 +34,13 @@ struct CartListView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showSort = true
-                } label: {
-                    Image(.sortButton)
+            if vm.cartItems.count >= 2 {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showSort = true
+                    } label: {
+                        Image(.sortButton)
+                    }
                 }
             }
         }
@@ -47,6 +49,7 @@ struct CartListView: View {
         .overlay(loadingOverlay, alignment: .center)
         .overlay(errorOverlay, alignment: .center)
         .overlay(deleteOverlay)
+        .overlay(sortOverlay)
     }
     
     // MARK: - Подвиды
@@ -136,7 +139,7 @@ struct CartListView: View {
                         } placeholder: {
                             ProgressView()
                         }
-                        .frame(maxWidth: 108)
+                        .frame(maxWidth: UIConstants.nftImageWidthHeight)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
@@ -177,6 +180,87 @@ struct CartListView: View {
                 .padding()
             }
             .transition(.opacity)
+        }
+    }
+    
+    @ViewBuilder
+    private var sortOverlay: some View {
+        if showSort {
+            ZStack {
+                
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation {
+                            showSort = false
+                        }
+                    }
+                
+                VStack(spacing: 0) {
+                    Text("Сортировка")
+                        .font(.system(size: 18, weight: .semibold))
+                        .padding(.top, 24)
+                        .padding(.bottom, 16)
+                    
+                    Divider()
+                    
+                    VStack(spacing: 0) {
+                        ForEach(SortOption.allCases, id: \.self) { option in
+                            Button {
+                                withAnimation {
+                                    vm.sortOption = option
+                                    showSort = false
+                                }
+                            } label: {
+                                HStack {
+                                    Text(option.title)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if vm.sortOption == option {
+                                        Image(systemName: "checkmark")
+                                            .foregroundColor(.greenUniversal)
+                                            .font(.system(size: 16, weight: .medium))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            
+                            if option != SortOption.allCases.last {
+                                Divider()
+                                    .padding(.leading, 0)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    
+                    Divider()
+                        .padding(.top, 8)
+                    
+                    Button {
+                        withAnimation {
+                            showSort = false
+                        }
+                    } label: {
+                        Text("Закрыть")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.primary)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.bottom, 8)
+                }
+                .background(Color(.systemBackground))
+                .cornerRadius(12)
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .padding(.bottom, 34) 
+            }
+            .transition(.opacity.combined(with: .move(edge: .bottom)))
+            .zIndex(1000)
         }
     }
 }
