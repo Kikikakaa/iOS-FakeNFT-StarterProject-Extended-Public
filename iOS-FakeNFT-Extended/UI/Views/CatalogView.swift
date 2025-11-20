@@ -45,8 +45,6 @@ struct CatalogView: View {
                     }
                 }
             }
-            .navigationTitle("Каталог")
-            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -61,7 +59,7 @@ struct CatalogView: View {
                 Button("По количеству NFT") { viewModel.sortOption = CatalogViewModel.SortOption.byCount }
                 Button("Отмена", role: .cancel) { }
             } message: {
-                Text("Выберите способ сортировки коллекций")
+                Text("Сортировка")
             }
             .task {
                 await viewModel.loadCollections()
