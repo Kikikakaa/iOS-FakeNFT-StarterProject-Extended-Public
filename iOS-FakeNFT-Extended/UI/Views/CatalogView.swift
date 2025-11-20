@@ -45,6 +45,9 @@ struct CatalogView: View {
                     }
                 }
             }
+            .navigationDestination(for: Collection.self) { collection in
+                CollectionDetailView(collection: collection)
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
