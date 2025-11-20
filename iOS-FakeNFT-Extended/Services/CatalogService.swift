@@ -3,10 +3,6 @@
 //  iOS-FakeNFT-Extended
 import Foundation
 
-protocol CatalogServiceProtocol {
-    func fetchCollections() async throws -> [Collection]
-}
-
 final class CatalogService: CatalogServiceProtocol {
     func fetchCollections() async throws -> [Collection] {
         // Имитация сетевого запроса с задержкой

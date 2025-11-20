@@ -4,16 +4,22 @@
 
 import Foundation
 
-struct Collection: Codable, Identifiable {
+struct Collection: Codable, Identifiable, Hashable {
     let id: String
     let cover: String
     let name: String
     let nftsCount: Int
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case cover
-        case name
-        case nftsCount = "nfts_count"
+
+    static func == (lhs: Collection, rhs: Collection) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    var isLocalImage: Bool {
+        // Если cover не начинается с http, считаем что это локальный ассет
+        return !cover.hasPrefix("http")
     }
 }
