@@ -42,6 +42,8 @@
 		ABC5E1E62C320585002B4068 /* LinePageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E52C320585002B4068 /* LinePageControl.swift */; };
 		ABC5E1E82C320610002B4068 /* NftDetailBridgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */; };
 		ABC5E1EB2C32084F002B4068 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ABC5E1E92C32084F002B4068 /* Localizable.strings */; };
+		CE17840F2ECDF5F800F82BA7 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE17840E2ECDF5F000F82BA7 /* UIConstants.swift */; };
+		CE1784132ECE03FD00F82BA7 /* BackgroundBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1784122ECE03F000F82BA7 /* BackgroundBlurView.swift */; };
 		CE7CCCC32EC5E3A700DDD0C9 /* OrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7CCCC22EC5E39B00DDD0C9 /* OrderResponse.swift */; };
 		CE7CCCC52EC5E5F600DDD0C9 /* NFTItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7CCCC42EC5E3C600DDD0C9 /* NFTItem.swift */; };
 		CE7CCCC72EC5E6B800DDD0C9 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7CCCC62EC5E6B200DDD0C9 /* MockData.swift */; };
@@ -105,6 +107,8 @@
 		ABC5E1E52C320585002B4068 /* LinePageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinePageControl.swift; sourceTree = "<group>"; };
 		ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftDetailBridgeView.swift; sourceTree = "<group>"; };
 		ABC5E1EA2C32084F002B4068 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE17840E2ECDF5F000F82BA7 /* UIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
+		CE1784122ECE03F000F82BA7 /* BackgroundBlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundBlurView.swift; sourceTree = "<group>"; };
 		CE7CCCC22EC5E39B00DDD0C9 /* OrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderResponse.swift; sourceTree = "<group>"; };
 		CE7CCCC42EC5E3C600DDD0C9 /* NFTItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTItem.swift; sourceTree = "<group>"; };
 		CE7CCCC62EC5E6B200DDD0C9 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
@@ -286,6 +290,8 @@
 		ABC5E1B32C31FC03002B4068 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				CE1784122ECE03F000F82BA7 /* BackgroundBlurView.swift */,
+				CE17840E2ECDF5F000F82BA7 /* UIConstants.swift */,
 				ABC5E16D2C31F5AF002B4068 /* ContentView.swift */,
 				ABC5E1B42C31FC57002B4068 /* TabBarView.swift */,
 				CE7CCCD02EC5EAF500DDD0C9 /* CartListView.swift */,
@@ -489,7 +495,9 @@
 				ABC5E16E2C31F5AF002B4068 /* ContentView.swift in Sources */,
 				CE7CCCD12EC5EAF500DDD0C9 /* CartListView.swift in Sources */,
 				CE7CCCC32EC5E3A700DDD0C9 /* OrderResponse.swift in Sources */,
+				CE1784132ECE03FD00F82BA7 /* BackgroundBlurView.swift in Sources */,
 				CE7CCCD32EC5EBB900DDD0C9 /* CartItemRow.swift in Sources */,
+				CE17840F2ECDF5F800F82BA7 /* UIConstants.swift in Sources */,
 				ABC5E1B92C31FD51002B4068 /* TestCatalogView.swift in Sources */,
 				ABC5E1DF2C3204FB002B4068 /* LoadingView.swift in Sources */,
 				ABC5E1972C31F656002B4068 /* Colors.swift in Sources */,

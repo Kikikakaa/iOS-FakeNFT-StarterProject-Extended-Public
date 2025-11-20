@@ -43,7 +43,7 @@ struct CartItemRow: View {
 }
 
 // MARK: - Preview
-#Preview("Светлая тема") {
+#Preview() {
     CartItemRow(
         item: .mock1,
         onDelete: { print("Удалено") }
@@ -52,13 +52,4 @@ struct CartItemRow: View {
     .previewLayout(.sizeThatFits)
 }
 
-#Preview("Тёмная тема") {
-    CartItemRow(
-        item: .mock1,
-        onDelete: { print("Удалено") }
-    )
-    .padding()
-    .previewLayout(.sizeThatFits)
-    .preferredColorScheme(.dark)
-}
 

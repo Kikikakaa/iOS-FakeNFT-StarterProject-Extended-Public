@@ -52,24 +52,36 @@ final class CartViewModel: ObservableObject {
 
     func removeItem(_ nftId: String) async {
         guard let index = cartItems.firstIndex(where: { $0.id == nftId }) else { return }
-
+        
         isLoading = true
+        defer { isLoading = false }
 
         do {
-            let updatedNFTs = cartItems.filter { $0.id != nftId }.map { $0.id }
-            let _: OrderResponse = try await client.send(
-                request: UpdateOrderRequest(nfts: updatedNFTs)
-            )
+            let remainingIds = cartItems.filter { $0.id != nftId }.map { $0.id }
+            let bodyString = remainingIds.map { "nfts=\($0)" }.joined(separator: "&")
+            
+            var request = URLRequest(url: URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")!)
+            request.httpMethod = "PUT"
+            request.httpBody = bodyString.data(using: .utf8)
+            request.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            request.setValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
+            let (_, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  200..<300 ~= httpResponse.statusCode else {
+                throw URLError(.badServerResponse)
+            }
+
+            // Успешно — обновляем UI
             cartItems.remove(at: index)
-            self.cartItemsCount = cartItems.count
+            cartItemsCount = cartItems.count
             total = cartItems.reduce(0) { $0 + $1.price }
 
         } catch {
-            errorMessage = "Не удалось удалить"
+            errorMessage = "Не удалось удалить NFT из корзины"
+            print("Remove error: \(error)")
         }
-
-        isLoading = false
     }
 
     func clearCart() async {

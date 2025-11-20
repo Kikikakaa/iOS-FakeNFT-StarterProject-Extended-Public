@@ -19,10 +19,26 @@ struct UpdateOrderRequest: NetworkRequest {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
 
-    var httpMethod: HttpMethod { .put }
+    var httpMethod: HttpMethod = .put
 
-    var dto: Encodable? {
-        UpdateOrderDTO(nfts: nfts)
+    var dto: Encodable? { nil }
+
+    func asURLRequest() throws -> URLRequest {
+        guard let url = endpoint else {
+            throw NetworkClientError.incorrectRequest("Invalid URL")
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod.rawValue
+        
+        let bodyString = nfts.map { "nfts=\($0)" }.joined(separator: "&")
+        request.httpBody = bodyString.data(using: .utf8)
+        
+        request.setValue("application/x-www-form-urlencoded; charset=utf-8",
+                         forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        return request
     }
 }
 

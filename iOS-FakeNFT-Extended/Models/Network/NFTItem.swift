@@ -11,7 +11,6 @@ struct NFTItem: Codable, Identifiable {
     let author: String
     let id: String
 
-    // Для SwiftUI
     var imageUrl: String {
         images.first ?? ""
     }
@@ -21,11 +20,13 @@ struct NFTItem: Codable, Identifiable {
     }
     
     var ratingStars: some View {
-        HStack(spacing: 3) {
+        HStack(spacing: UIConstants.Rating.spacing) {
             ForEach(0..<5) { index in
-                Image(index < rating ? "done" : "noActive")
+                let star: ImageResource = index < rating ? .done : .noActive
+
+                Image(star)
                     .resizable()
-                    .frame(width: 12, height: 12)
+                    .frame(width: UIConstants.Rating.starSize, height: UIConstants.Rating.starSize)
             }
         }
     }

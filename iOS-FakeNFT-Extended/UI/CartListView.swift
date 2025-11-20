@@ -3,6 +3,7 @@ import SwiftUI
 struct CartListView: View {
     @StateObject private var vm = CartViewModel()
     @State private var showSort = false
+    @State private var itemToDelete: NFTItem? = nil
     
     var body: some View {
         NavigationStack {
@@ -17,7 +18,7 @@ struct CartListView: View {
                             } else {
                                 ForEach(vm.cartItems) { item in
                                     CartItemRow(item: item) {
-                                        Task { await vm.removeItem(item.id) }
+                                        itemToDelete = item
                                     }
                                 }
                             }
@@ -44,6 +45,7 @@ struct CartListView: View {
         .task { await vm.loadCart() }
         .overlay(loadingOverlay, alignment: .center)
         .overlay(errorOverlay, alignment: .center)
+        .overlay(deleteOverlay)
     }
     
     // MARK: - Подвиды
@@ -86,14 +88,6 @@ struct CartListView: View {
         .padding(.horizontal)
         .padding(.vertical, 16)
         .background(.lightGray)
-//        .clipShape(
-//            .rect(
-//                topLeadingRadius: 12,
-//                bottomLeadingRadius: 0,
-//                bottomTrailingRadius: 0,
-//                topTrailingRadius: 12
-//                )
-//            )
     }
 
     @ViewBuilder
@@ -124,6 +118,75 @@ struct CartListView: View {
             .padding()
         }
     }
+    
+    @ViewBuilder
+    private var deleteOverlay: some View {
+        if let item = itemToDelete {
+            ZStack {
+                // Размытие корзины под экраном подтверждения
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 24) {
+
+                    // NFT картинка
+                    if let url = URL(string: item.imageUrl) {
+                        AsyncImage(url: url) { img in
+                            img.resizable().scaledToFit()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(maxWidth: 220)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+
+                    // Текст вопроса
+                    Text("Вы уверены, что хотите\nудалить объект из корзины?")
+                        .multilineTextAlignment(.center)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    // КНОПКИ
+                    HStack(spacing: 16) {
+
+                        // ❌ Удалить
+                        Button {
+                            Task {
+                                await vm.removeItem(item.id)
+                                itemToDelete = nil
+                            }
+                        } label: {
+                            Text("Удалить")
+                                .foregroundColor(.red)
+                                .font(.body.bold())
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .background(Color.black)
+                                .cornerRadius(14)
+                        }
+
+                        // ➡️ Вернуться
+                        Button {
+                            itemToDelete = nil
+                        } label: {
+                            Text("Вернуться")
+                                .foregroundColor(.white)
+                                .font(.body.bold())
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .background(Color.black)
+                                .cornerRadius(14)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding()
+            }
+            .transition(.opacity)
+           // .animation(.easeInOut, value: itemToDelete)
+        }
+    }
+
+    
 }
 
 #Preview {
