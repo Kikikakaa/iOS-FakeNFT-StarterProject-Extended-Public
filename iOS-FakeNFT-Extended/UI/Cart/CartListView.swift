@@ -187,7 +187,6 @@ struct CartListView: View {
     private var sortOverlay: some View {
         if showSort {
             ZStack {
-                
                 Color.black.opacity(0.4)
                     .ignoresSafeArea()
                     .onTapGesture {
@@ -197,47 +196,44 @@ struct CartListView: View {
                     }
                 
                 VStack(spacing: 0) {
-                    Text("Сортировка")
-                        .font(.system(size: 18, weight: .semibold))
-                        .padding(.top, 24)
-                        .padding(.bottom, 16)
-                    
-                    Divider()
                     
                     VStack(spacing: 0) {
-                        ForEach(SortOption.allCases, id: \.self) { option in
-                            Button {
-                                withAnimation {
-                                    vm.sortOption = option
-                                    showSort = false
-                                }
-                            } label: {
-                                HStack {
-                                    Text(option.title)
-                                        .font(.system(size: 16))
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                    if vm.sortOption == option {
-                                        Image(systemName: "checkmark")
-                                            .foregroundColor(.greenUniversal)
-                                            .font(.system(size: 16, weight: .medium))
+                        Text("Сортировка")
+                            .font(.system(size: 13, weight: .regular))
+                            .padding(.vertical, 12)
+                            .foregroundColor(.grayUniversal)
+                        
+                        Divider()
+                        
+                        VStack(spacing: 0) {
+                            ForEach(SortOption.allCases, id: \.self) { option in
+                                Button {
+                                    withAnimation {
+                                        vm.sortOption = option
+                                        showSort = false
                                     }
+                                } label: {
+                                    HStack {
+                                        Text(option.title)
+                                            .font(.system(size: 20))
+                                            .foregroundColor(.blueUniversal)
+                                    }
+                                    .frame(maxWidth: .infinity, minHeight: 60)
+                                    .contentShape(Rectangle())
                                 }
-                                .frame(maxWidth: .infinity, minHeight: 44)
-                                .contentShape(Rectangle())
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            
-                            if option != SortOption.allCases.last {
-                                Divider()
-                                    .padding(.leading, 0)
+                                .buttonStyle(PlainButtonStyle())
+                                
+                                if option != SortOption.allCases.last {
+                                    Divider()
+                                }
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .background(.thinMaterial)
+                    .cornerRadius(12)
+                    .padding(.horizontal, 8)
                     
-                    Divider()
-                        .padding(.top, 8)
+                    Spacer().frame(height: 8)
                     
                     Button {
                         withAnimation {
@@ -245,19 +241,17 @@ struct CartListView: View {
                         }
                     } label: {
                         Text("Закрыть")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.primary)
-                            .frame(maxWidth: .infinity, minHeight: 44)
-                            .contentShape(Rectangle())
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.blueUniversal)
+                            .frame(maxWidth: .infinity, minHeight: 60)
+                            .background(.ypWhite)
+                            .cornerRadius(12)
+                            .padding(.horizontal, 8)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .padding(.bottom, 8)
+                    .padding(.bottom, 16)
                 }
-                .background(Color(.systemBackground))
-                .cornerRadius(12)
-                .padding(.horizontal, 16)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .padding(.bottom, 34) 
             }
             .transition(.opacity.combined(with: .move(edge: .bottom)))
             .zIndex(1000)
