@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct CartListView: View {
     @StateObject private var vm = CartViewModel()
@@ -133,15 +134,11 @@ struct CartListView: View {
 
                 VStack(spacing: 12) {
 
-                    if let url = URL(string: item.imageUrl) {
-                        AsyncImage(url: url) { img in
-                            img.resizable().scaledToFit()
-                        } placeholder: {
-                            ProgressView()
-                        }
+                    KFImage(URL(string: item.imageUrl))
+                        .resizable()
+                        .scaledToFit()
                         .frame(maxWidth: UIConstants.nftImageWidthHeight)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
 
                     Text("Вы уверены, что хотите\nудалить объект из корзины?")
                         .multilineTextAlignment(.center)
