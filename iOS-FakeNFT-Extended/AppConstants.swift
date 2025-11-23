@@ -24,6 +24,25 @@ enum AppConstants {
         static let chevronSize: CGFloat = 14
     }
     
+    // MARK: - NFTGridCell
+    enum NFTGridCell {
+        static let imageHeight: CGFloat = 140
+        static let cornerRadius: CGFloat = 12
+        static let padding: CGFloat = 8
+        static let starSize: CGFloat = 12
+        
+        // Шрифты
+        static let titleFontSize: CGFloat = 14
+        static let priceFontSize: CGFloat = 14
+        static let labelFontSize: CGFloat = 12
+    }
+    
+    // MARK: - NFTGridView
+    enum NFTGridView {
+        static let columnsSpacing: CGFloat = 16
+        static let rowSpacing: CGFloat = 16
+    }
+    
     // MARK: - CollectionDetailView
     enum CollectionDetail {
         static let coverHeightMultiplier: CGFloat = 3.0
