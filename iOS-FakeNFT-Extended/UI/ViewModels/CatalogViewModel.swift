@@ -1,6 +1,7 @@
 //
 //  CatalogViewModel.swift
 //  iOS-FakeNFT-Extended
+//
 import Foundation
 
 @MainActor
@@ -8,6 +9,7 @@ final class CatalogViewModel: ObservableObject {
     @Published var collections: [CatalogCollectionItem] = []
     @Published var isLoading: Bool = false
     @Published var sortOption: SortOption = .byName
+    @Published var error: String?
     
     enum SortOption {
         case byName, byCount
@@ -28,14 +30,15 @@ final class CatalogViewModel: ObservableObject {
     
     func loadCollections() async {
         isLoading = true
+        error = nil
+        
         defer { isLoading = false }
         
         do {
             collections = try await catalogService.fetchCollections()
         } catch {
-            // Временно просто выводим ошибку
+            self.error = "Не удалось загрузить коллекции: \(error.localizedDescription)"
             print("Error loading collections: \(error)")
-            // TODO: Добавить обработку ошибок через @Published свойство
         }
     }
     

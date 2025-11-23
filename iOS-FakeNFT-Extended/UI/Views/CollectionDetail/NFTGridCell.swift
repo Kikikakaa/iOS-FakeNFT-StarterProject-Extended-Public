@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct NFTGridCell: View {
-    let nft: NFT
+    let nft: Nft
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -67,12 +67,13 @@ struct NFTGridCell: View {
 
 struct NFTGridCell_Previews: PreviewProvider {
     static var previews: some View {
-        NFTGridCell(nft: NFT(
+        NFTGridCell(nft: Nft(
             id: "1",
             images: [URL(string: "https://example.com/nft1.jpg")!],
             name: "Космический кот #1",
             rating: 4,
-            price: 1.5
+            price: 1.5,
+            author: "Иван Петров"
         ))
         .frame(width: 160, height: 220)
         .padding()

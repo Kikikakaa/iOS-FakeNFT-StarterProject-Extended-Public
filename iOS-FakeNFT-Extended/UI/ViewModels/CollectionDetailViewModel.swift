@@ -6,7 +6,7 @@ import Foundation
 
 @MainActor
 final class CollectionDetailViewModel: ObservableObject {
-    @Published var nfts: [NFT] = []
+    @Published var nfts: [Nft] = []
     @Published var author: Author?
     @Published var isLoading: Bool = false
     @Published var error: String?

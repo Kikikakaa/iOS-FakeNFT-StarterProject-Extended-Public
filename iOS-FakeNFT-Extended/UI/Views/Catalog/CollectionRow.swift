@@ -67,24 +67,21 @@ struct CollectionRow_Previews: PreviewProvider {
         List {
             CollectionRow(catalogCollectionItem: CatalogCollectionItem(
                 id: "1",
-                cover: "mock_catalog_peach",
                 name: "Космические NFT",
-                nftsCount: 15,
+                cover: "mock_catalog_peach",
+                nfts: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"],
                 description: "Описание коллекции",
-                author: "author_1",
-                nfts: ["1", "2", "3"]
+                author: "author_1"
             ))
             CollectionRow(catalogCollectionItem: CatalogCollectionItem(
                 id: "2",
-                cover: "https://example.com/image2.jpg",
                 name: "Цифровое искусство с длинным названием, чтобы проверить усечение",
-                nftsCount: 8,
+                cover: "https://example.com/image2.jpg",
+                nfts: ["1", "2", "3", "4", "5", "6", "7", "8"],
                 description: "Еще одна коллекция",
-                author: "author_2",
-                nfts: ["4", "5"]
+                author: "author_2"
             ))
         }
         .listStyle(.plain)
     }
 }
-

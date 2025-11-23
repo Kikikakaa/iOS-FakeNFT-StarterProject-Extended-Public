@@ -1,8 +1,3 @@
-//
-//  Untitled.swift
-//  iOS-FakeNFT-Extended
-//
-//
 //  Untitled.swift
 //  iOS-FakeNFT-Extended
 //
