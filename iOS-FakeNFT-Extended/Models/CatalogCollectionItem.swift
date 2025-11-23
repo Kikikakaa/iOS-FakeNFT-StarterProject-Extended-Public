@@ -9,6 +9,9 @@ struct CatalogCollectionItem: Codable, Identifiable, Hashable {
     let cover: String
     let name: String
     let nftsCount: Int
+    let description: String?
+    let author: String?
+    let nfts: [String]?
 
     static func == (lhs: CatalogCollectionItem, rhs: CatalogCollectionItem) -> Bool {
         return lhs.id == rhs.id
