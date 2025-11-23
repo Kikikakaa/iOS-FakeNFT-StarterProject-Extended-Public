@@ -5,15 +5,15 @@ struct TabBarView: View {
     
     var body: some View {
         TabView {
-            ProfileView(servicesAssembly: servicesAssembly)
+            ProfileView()
                 .tabItem {
                     Label(
-                        NSLocalizedString("Tab.profile", comment: ""),
+                        NSLocalizedString("Profile.title", comment: ""),
                         systemImage: "person.crop.circle.fill"
                     )
                 }
                 .backgroundStyle(.background)
-            
+
             TestCatalogView()
                 .tabItem {
                     Label(

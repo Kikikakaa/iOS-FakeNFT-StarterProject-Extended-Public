@@ -3,14 +3,16 @@ import Combine
 
 final class ProfileViewModel: ObservableObject {
     
-    @Published var profile: ProfileUIModel?
+    // Обновили тип данных
+    @Published var profile: ProfileModel?
     
     init() {
         loadMockProfile()
     }
     
     private func loadMockProfile() {
-        self.profile = ProfileUIModel(
+        // Создаем ProfileModel вместо ProfileUIModel
+        self.profile = ProfileModel(
             avatarURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Joaquin%20Phoenix.png"),
             name: "Joaquin Phoenix",
             description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
