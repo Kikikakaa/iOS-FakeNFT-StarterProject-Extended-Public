@@ -12,25 +12,25 @@ struct CartListView: View {
             ZStack {
                 Color(.systemBackground).ignoresSafeArea()
                 
-                VStack(spacing: 0) {
-                    ScrollView {
-                        LazyVStack(spacing: 32) {
-                            if vm.cartItems.isEmpty {
-                                emptyState
-                            } else {
+                if vm.cartItems.isEmpty {
+                    emptyState
+                } else {
+                    VStack(spacing: 0) {
+                        ScrollView {
+                            LazyVStack(spacing: 32) {
                                 ForEach(vm.sortedCartItems) { item in
                                     CartItemRow(item: item) {
                                         itemToDelete = item
                                     }
                                 }
                             }
+                            .padding()
                         }
-                        .padding()
+                        
+                        Spacer(minLength: 0)
+                        bottomPanel
+                            .ignoresSafeArea(.container, edges: .bottom)
                     }
-                    
-                    Spacer(minLength: 0)
-                    bottomPanel
-                        .ignoresSafeArea(.container, edges: .bottom)
                 }
             }
         }
@@ -57,16 +57,14 @@ struct CartListView: View {
     // MARK: - Подвиды
     @ViewBuilder
     private var emptyState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "cart")
-                .font(.system(size: 60))
-                .foregroundColor(.secondary)
+        VStack {
+            Spacer()
             Text("Корзина пуста")
-                .font(.title2)
-                .foregroundColor(.secondary)
+                .font(.bodyBold)
+                .foregroundColor(.ypBlack)
+            Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.top, 100)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
     @ViewBuilder
