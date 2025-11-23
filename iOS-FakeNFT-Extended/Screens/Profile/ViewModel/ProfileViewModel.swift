@@ -1,24 +1,61 @@
 import Foundation
 import Combine
 
+@MainActor
 final class ProfileViewModel: ObservableObject {
     
-    // Обновили тип данных
     @Published var profile: ProfileModel?
+    @Published var isLoading: Bool = false
+    @Published var error: Error?
     
-    init() {
-        loadMockProfile()
+    func loadProfile(service: ProfileService) {
+        isLoading = true
+        Task {
+            do {
+                let profile = try await service.loadProfile()
+                self.profile = profile
+                self.isLoading = false
+            } catch {
+                print("[ProfileViewModel] Ошибка загрузки: \(error)")
+                self.error = error
+                self.isLoading = false
+            }
+        }
     }
     
-    private func loadMockProfile() {
-        // Создаем ProfileModel вместо ProfileUIModel
-        self.profile = ProfileModel(
-            avatarURL: URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Joaquin%20Phoenix.png"),
-            name: "Joaquin Phoenix",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-            websiteURL: URL(string: "https://practicum.yandex.ru"),
-            nftsCount: "(112)",
-            likesCount: "(11)"
+    func updateProfile(
+        service: ProfileService,
+        newName: String,
+        newDescription: String,
+        newWebsite: String,
+        newAvatar: URL?
+    ) {
+        guard let currentProfile = profile else { return }
+        
+        let updatedModel = ProfileModel(
+            avatarURL: newAvatar,
+            name: newName,
+            description: newDescription,
+            websiteURL: URL(string: newWebsite),
+            nftsCount: currentProfile.nftsCount,
+            likesCount: currentProfile.likesCount
         )
+        
+        isLoading = true
+        
+        Task {
+            do {
+                // Отправляем на сервер
+                let resultProfile = try await service.updateProfile(model: updatedModel)
+                
+                // Если ок - обновляем UI
+                self.profile = resultProfile
+                self.isLoading = false
+            } catch {
+                print("[ProfileViewModel] Ошибка обновления: \(error)")
+                self.error = error
+                self.isLoading = false
+            }
+        }
     }
 }

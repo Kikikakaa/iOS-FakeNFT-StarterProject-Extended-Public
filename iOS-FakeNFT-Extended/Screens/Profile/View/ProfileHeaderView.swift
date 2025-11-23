@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ProfileHeaderView: View {
-    // Используем новую ProfileModel
     let profile: ProfileModel
     
     var body: some View {

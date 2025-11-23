@@ -1,24 +1,27 @@
 import SwiftUI
 
 struct ProfileView: View {
-    // 1. Создаем ViewModel сами (StateObject)
     @StateObject private var viewModel = ProfileViewModel()
-    
-    // 2. Получаем сервисы из Environment (без init!)
     @Environment(ServicesAssembly.self) private var servicesAssembly
     
     @State private var isShowingEditSheet = false
     
     var body: some View {
         NavigationView {
-            // 3. Используем .zero
             VStack(spacing: .zero) {
-                if let profile = viewModel.profile {
-                    // Код стал чистым — вызываем функции-строители
+                // 1. Если идет загрузка — крутим спиннер
+                if viewModel.isLoading {
+                    ProgressView()
+                }
+                // 2. Если загрузка кончилась и есть данные — показываем профиль
+                else if let profile = viewModel.profile {
                     headerView(profile: profile)
                     listView(profile: profile)
-                } else {
-                    ProgressView()
+                }
+                // 3. Если ни того, ни другого (например, ошибка) — пустота или текст ошибки
+                else {
+                    Text("Не удалось загрузить профиль")
+                        .foregroundStyle(.gray)
                 }
             }
             .background(Color(uiColor: .systemBackground))
@@ -27,21 +30,28 @@ struct ProfileView: View {
                 editButton
             }
         }
-        .sheet(isPresented: $isShowingEditSheet) {
-            Text("Edit Profile View Stub")
+        // 4. Как только экран появился — качаем данные
+        .onAppear {
+            // Передаем сервис прямо из Environment
+            viewModel.loadProfile(service: servicesAssembly.profileService)
         }
+                .fullScreenCover(isPresented: $isShowingEditSheet) {
+                    ProfileEditView(
+                        viewModel: viewModel,
+                        profileService: servicesAssembly.profileService,
+                        isPresented: $isShowingEditSheet
+                    )
+                }
     }
     
     // MARK: - Private Subviews
     
-    // Вынесли создание хедера
     private func headerView(profile: ProfileModel) -> some View {
         ProfileHeaderView(profile: profile)
             .padding(.horizontal, 16)
             .padding(.top, 20)
     }
     
-    // Вынесли создание списка
     private func listView(profile: ProfileModel) -> some View {
         List {
             Section {
@@ -64,7 +74,6 @@ struct ProfileView: View {
         .listStyle(.plain)
     }
     
-    // Вынесли кнопку редактирования
     private var editButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
