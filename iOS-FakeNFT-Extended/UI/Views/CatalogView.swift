@@ -26,7 +26,7 @@ struct CatalogView: View {
             ZStack {
                 if viewModel.isLoading {
                     ProgressView()
-                        .scaleEffect(1.5)
+                        .scaleEffect(AppConstants.Catalog.progressViewScale)
                 } else {
                     List(viewModel.sortedCollections) { collection in
                         Button {
@@ -36,7 +36,7 @@ struct CatalogView: View {
                         }
                         .buttonStyle(.plain)
                         .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                        .listRowInsets(AppConstants.Catalog.listRowInsets)
                         .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)

@@ -10,7 +10,7 @@ struct CollectionDetailView: View {
     var body: some View {
         GeometryReader { geo in
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: AppConstants.CollectionDetail.verticalSpacing) {
                     // Обложка — 1/3 высоты экрана
                     Group {
                         if collection.isLocalImage {
@@ -22,7 +22,7 @@ struct CollectionDetailView: View {
                                 switch phase {
                                 case .empty:
                                     Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
+                                        .fill(Color.gray.opacity(AppConstants.Common.opacityForPlaceholder))
                                         .overlay(ProgressView())
                                 case .success(let image):
                                     image
@@ -30,34 +30,34 @@ struct CollectionDetailView: View {
                                         .scaledToFill()
                                 case .failure:
                                     Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
+                                        .fill(Color.gray.opacity(AppConstants.Common.opacityForPlaceholder))
                                         .overlay(Image(systemName: "photo"))
                                 @unknown default:
                                     Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
+                                        .fill(Color.gray.opacity(AppConstants.Common.opacityForPlaceholder))
                                 }
                             }
                         }
                     }
-                    .frame(width: geo.size.width, height: geo.size.height / 3)
+                    .frame(width: geo.size.width, height: geo.size.height / AppConstants.CollectionDetail.coverHeightMultiplier)
                     .clipped()
 
                     // Контент под обложкой
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: AppConstants.CollectionDetail.contentSpacing) {
                         Text(collection.name)
-                            .font(.system(size: 22, weight: .bold))
+                            .font(.system(size: AppConstants.CollectionDetail.titleFontSize, weight: .bold))
                             .foregroundColor(.primary)
                         
                         Text("Автор не указан")
-                            .font(.subheadline)
+                            .font(.system(size: AppConstants.CollectionDetail.subtitleFontSize))
                             .foregroundColor(.secondary)
                         
                         Text("Описание отсутствует")
-                            .font(.body)
+                            .font(.system(size: AppConstants.CollectionDetail.bodyFontSize))
                             .foregroundColor(.secondary)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 32)
+                    .padding(.horizontal, AppConstants.CollectionDetail.horizontalPadding)
+                    .padding(.bottom, AppConstants.CollectionDetail.bottomPadding)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             } // ScrollView

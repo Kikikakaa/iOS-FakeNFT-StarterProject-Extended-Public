@@ -8,7 +8,7 @@ struct CollectionRow: View {
     let collection: Collection
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: AppConstants.CollectionRow.spacing) {
             
             Group {
                 if collection.isLocalImage {
@@ -37,10 +37,11 @@ struct CollectionRow: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity, minHeight: 140, maxHeight: 140)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .frame(maxWidth: .infinity, minHeight: AppConstants.CollectionRow.imageSize.height,
+                   maxHeight: AppConstants.CollectionRow.imageSize.height)
+            .clipShape(RoundedRectangle(cornerRadius: AppConstants.CollectionRow.imageCornerRadius, style: .continuous))
 
-            HStack(spacing: 4) {
+            HStack(spacing: AppConstants.CollectionRow.verticalSpacing) {
                 Text(collection.name)
                     .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.primary)
@@ -54,9 +55,9 @@ struct CollectionRow: View {
 
             Spacer()
         }
-        .frame(height: 179)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 4)
+        .frame(height: AppConstants.CollectionRow.rowHeight)
+        .padding(.horizontal, AppConstants.CollectionRow.horizontalPadding)
+        .padding(.vertical, AppConstants.CollectionRow.verticalPadding)
         .contentShape(Rectangle())
     }
 }
