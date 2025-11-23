@@ -26,17 +26,17 @@ struct CatalogView: View {
             ZStack {
                 if viewModel.isLoading {
                     ProgressView()
-                        .scaleEffect(AppConstants.Catalog.progressViewScale)
+                        .scaleEffect(1.5)
                 } else {
-                    List(viewModel.sortedCollections) { collection in
+                    List(viewModel.sortedCollections) { catalogCollectionItem in
                         Button {
-                            path.append(collection)
+                            path.append(catalogCollectionItem)
                         } label: {
-                            CollectionRow(collection: collection)
+                            CollectionRow(catalogCollectionItem: catalogCollectionItem)
                         }
                         .buttonStyle(.plain)
                         .listRowSeparator(.hidden)
-                        .listRowInsets(AppConstants.Catalog.listRowInsets)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                         .listRowBackground(Color.clear)
                     }
                     .listStyle(.plain)
@@ -45,8 +45,8 @@ struct CatalogView: View {
                     }
                 }
             }
-            .navigationDestination(for: Collection.self) { collection in
-                CollectionDetailView(collection: collection)
+            .navigationDestination(for: CatalogCollectionItem.self) { catalogCollectionItem in
+                CollectionDetailView(catalogCollectionItem: catalogCollectionItem)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -72,15 +72,15 @@ struct CatalogView: View {
 }
 
 struct CollectionDetailStubView: View {
-    let collection: Collection
+    let catalogCollectionItem: CatalogCollectionItem
 
     var body: some View {
         VStack {
-            Text(collection.name)
+            Text(catalogCollectionItem.name)
                 .font(.title)
             Text("Здесь будет экран коллекции NFT")
                 .foregroundColor(.secondary)
-            Text("Количество NFT: \(collection.nftsCount)")
+            Text("Количество NFT: \(catalogCollectionItem.nftsCount)")
         }
         .padding()
     }

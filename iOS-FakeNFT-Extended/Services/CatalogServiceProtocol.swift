@@ -5,5 +5,5 @@
 import Foundation
 
 protocol CatalogServiceProtocol {
-    func fetchCollections() async throws -> [Collection]
+    func fetchCollections() async throws -> [CatalogCollectionItem]
 }

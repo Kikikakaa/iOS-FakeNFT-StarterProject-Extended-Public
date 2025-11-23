@@ -5,18 +5,18 @@
 import SwiftUI
 
 struct CollectionRow: View {
-    let collection: Collection
+    let catalogCollectionItem: CatalogCollectionItem
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppConstants.CollectionRow.spacing) {
             
             Group {
-                if collection.isLocalImage {
-                    Image(collection.cover)
+                if catalogCollectionItem.isLocalImage {
+                    Image(catalogCollectionItem.cover)
                         .resizable()
                         .scaledToFill()
                 } else {
-                    AsyncImage(url: URL(string: collection.cover)) { phase in
+                    AsyncImage(url: URL(string: catalogCollectionItem.cover)) { phase in
                         switch phase {
                         case .empty:
                             Rectangle()
@@ -42,13 +42,13 @@ struct CollectionRow: View {
             .clipShape(RoundedRectangle(cornerRadius: AppConstants.CollectionRow.imageCornerRadius, style: .continuous))
 
             HStack(spacing: AppConstants.CollectionRow.verticalSpacing) {
-                Text(collection.name)
+                Text(catalogCollectionItem.name)
                     .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.primary)
                     .lineLimit(1)
                     .truncationMode(.tail)
 
-                Text("(\(collection.nftsCount))")
+                Text("(\(catalogCollectionItem.nftsCount))")
                     .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.primary)
             }
@@ -65,13 +65,13 @@ struct CollectionRow: View {
 struct CollectionRow_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            CollectionRow(collection: Collection(
+            CollectionRow(catalogCollectionItem: CatalogCollectionItem(
                 id: "1",
                 cover: "mock_catalog_peach",
                 name: "Космические NFT",
                 nftsCount: 15
             ))
-            CollectionRow(collection: Collection(
+            CollectionRow(catalogCollectionItem: CatalogCollectionItem(
                 id: "2",
                 cover: "https://example.com/image2.jpg",
                 name: "Цифровое искусство с длинным названием, чтобы проверить усечение",

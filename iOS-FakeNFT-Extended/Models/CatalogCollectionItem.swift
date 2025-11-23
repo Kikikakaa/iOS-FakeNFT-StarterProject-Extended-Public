@@ -4,13 +4,13 @@
 
 import Foundation
 
-struct Collection: Codable, Identifiable, Hashable {
+struct CatalogCollectionItem: Codable, Identifiable, Hashable {
     let id: String
     let cover: String
     let name: String
     let nftsCount: Int
 
-    static func == (lhs: Collection, rhs: Collection) -> Bool {
+    static func == (lhs: CatalogCollectionItem, rhs: CatalogCollectionItem) -> Bool {
         return lhs.id == rhs.id
     }
 

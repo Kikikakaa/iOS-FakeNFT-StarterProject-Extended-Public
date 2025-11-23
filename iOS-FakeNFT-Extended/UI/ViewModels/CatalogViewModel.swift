@@ -5,7 +5,7 @@ import Foundation
 
 @MainActor
 final class CatalogViewModel: ObservableObject {
-    @Published var collections: [Collection] = []
+    @Published var collections: [CatalogCollectionItem] = []
     @Published var isLoading: Bool = false
     @Published var sortOption: SortOption = .byName
     
@@ -39,7 +39,7 @@ final class CatalogViewModel: ObservableObject {
         }
     }
     
-    var sortedCollections: [Collection] {
+    var sortedCollections: [CatalogCollectionItem] {
         switch sortOption {
         case .byName:
             return collections.sorted { $0.name < $1.name }

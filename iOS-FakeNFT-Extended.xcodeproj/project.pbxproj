@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		31A49CB32ECF234900B549A6 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49CB22ECF234900B549A6 /* Collection.swift */; };
+		31A49CB32ECF234900B549A6 /* CatalogCollectionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49CB22ECF234900B549A6 /* CatalogCollectionItem.swift */; };
 		31A49CB92ECF244F00B549A6 /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49CB82ECF244F00B549A6 /* CatalogService.swift */; };
 		31A49CCA2ECF266F00B549A6 /* CollectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49CC92ECF266F00B549A6 /* CollectionRow.swift */; };
 		31A49CCC2ECF26D700B549A6 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A49CCB2ECF26D700B549A6 /* CatalogView.swift */; };
@@ -71,7 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		31A49CB22ECF234900B549A6 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		31A49CB22ECF234900B549A6 /* CatalogCollectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCollectionItem.swift; sourceTree = "<group>"; };
 		31A49CB82ECF244F00B549A6 /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; };
 		31A49CC92ECF266F00B549A6 /* CollectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionRow.swift; sourceTree = "<group>"; };
 		31A49CCB2ECF26D700B549A6 /* CatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogView.swift; sourceTree = "<group>"; };
@@ -251,7 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				31A49CCE2ECF2FFB00B549A6 /* MockCatalogData.swift */,
-				31A49CB22ECF234900B549A6 /* Collection.swift */,
+				31A49CB22ECF234900B549A6 /* CatalogCollectionItem.swift */,
 				ABC5E19F2C31F6CB002B4068 /* Network */,
 			);
 			path = Models;
@@ -498,7 +498,7 @@
 				ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */,
 				ABC5E1E42C32055B002B4068 /* ErrorView.swift in Sources */,
 				31A49CB92ECF244F00B549A6 /* CatalogService.swift in Sources */,
-				31A49CB32ECF234900B549A6 /* Collection.swift in Sources */,
+				31A49CB32ECF234900B549A6 /* CatalogCollectionItem.swift in Sources */,
 				ABC5E1A62C31F815002B4068 /* NetworkRequest.swift in Sources */,
 				ABC5E1D52C320446002B4068 /* NftDetailInput.swift in Sources */,
 				ABC5E16E2C31F5AF002B4068 /* ContentView.swift in Sources */,
