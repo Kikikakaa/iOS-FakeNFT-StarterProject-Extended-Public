@@ -42,6 +42,7 @@
 		ABC5E1E62C320585002B4068 /* LinePageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E52C320585002B4068 /* LinePageControl.swift */; };
 		ABC5E1E82C320610002B4068 /* NftDetailBridgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */; };
 		ABC5E1EB2C32084F002B4068 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ABC5E1E92C32084F002B4068 /* Localizable.strings */; };
+		CE4969902ED3923C0029EE36 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE49698F2ED392330029EE36 /* Currency.swift */; };
 		CE7CCCC32EC5E3A700DDD0C9 /* OrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7CCCC22EC5E39B00DDD0C9 /* OrderResponse.swift */; };
 		CE7CCCC52EC5E5F600DDD0C9 /* NFTItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7CCCC42EC5E3C600DDD0C9 /* NFTItem.swift */; };
 		CE7CCCC72EC5E6B800DDD0C9 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7CCCC62EC5E6B200DDD0C9 /* MockData.swift */; };
@@ -103,6 +104,7 @@
 		ABC5E1E52C320585002B4068 /* LinePageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinePageControl.swift; sourceTree = "<group>"; };
 		ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftDetailBridgeView.swift; sourceTree = "<group>"; };
 		ABC5E1EA2C32084F002B4068 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE49698F2ED392330029EE36 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		CE7CCCC22EC5E39B00DDD0C9 /* OrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderResponse.swift; sourceTree = "<group>"; };
 		CE7CCCC42EC5E3C600DDD0C9 /* NFTItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTItem.swift; sourceTree = "<group>"; };
 		CE7CCCC62EC5E6B200DDD0C9 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 		ABC5E19F2C31F6CB002B4068 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				CE49698F2ED392330029EE36 /* Currency.swift */,
 				CE7CCCC62EC5E6B200DDD0C9 /* MockData.swift */,
 				CE7CCCC42EC5E3C600DDD0C9 /* NFTItem.swift */,
 				CE7CCCC22EC5E39B00DDD0C9 /* OrderResponse.swift */,
@@ -476,6 +479,7 @@
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
 				ABC5E1E82C320610002B4068 /* NftDetailBridgeView.swift in Sources */,
 				ABC5E1E62C320585002B4068 /* LinePageControl.swift in Sources */,
+				CE4969902ED3923C0029EE36 /* Currency.swift in Sources */,
 				CE7CCCC52EC5E5F600DDD0C9 /* NFTItem.swift in Sources */,
 				ABC5E1DD2C3204DC002B4068 /* CellsReusingUtils.swift in Sources */,
 				CE7CCCC72EC5E6B800DDD0C9 /* MockData.swift in Sources */,

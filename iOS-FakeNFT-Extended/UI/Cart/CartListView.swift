@@ -5,6 +5,7 @@ struct CartListView: View {
     @StateObject private var vm = CartViewModel()
     @State private var showSort = false
     @State private var itemToDelete: NFTItem? = nil
+    @State private var showPaymentSheet = false
     
     var body: some View {
         NavigationStack {
@@ -67,34 +68,37 @@ struct CartListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.top, 100)
     }
-
+    
     @ViewBuilder
     private var bottomPanel: some View {
         HStack(spacing: 24) {
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(vm.cartItemsCount) NFT")
-                        .font(.caption1)
-                        
+                    .font(.caption1)
+                
                 Text(vm.total.ethFormatted)
                     .font(.bodyBold)
                     .foregroundColor(.greenUniversal)
             }
             .frame(alignment: .leading)
             
-            Button("К оплате") {
-                // Переход к оплате
+            NavigationLink {
+                PaymentMethodView()
+            } label: {
+                Text("К оплате")
+                    .font(.bodyBold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .background(.ypBlack)
+                    .cornerRadius(16)
             }
-            .font(.bodyBold)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity, minHeight: 44)
-            .background(.ypBlack)
-            .cornerRadius(16)
+            .disabled(vm.cartItems.isEmpty)
         }
         .padding(.horizontal)
         .padding(.vertical, 16)
         .background(.lightGray)
     }
-
+    
     @ViewBuilder
     private var loadingOverlay: some View {
         if vm.isLoading {

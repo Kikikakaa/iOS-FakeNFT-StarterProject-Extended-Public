@@ -42,6 +42,12 @@ struct UpdateOrderRequest: NetworkRequest {
     }
 }
 
+struct GetCurrenciesRequest: NetworkRequest {
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/currencies")
+    }
+}
+
 struct GetNFTRequest: NetworkRequest {
     let id: String
 
