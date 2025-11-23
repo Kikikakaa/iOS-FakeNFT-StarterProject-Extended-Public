@@ -2,6 +2,10 @@
 //  CatalogView.swift
 //  iOS-FakeNFT-Extended
 
+//
+//  CatalogView.swift
+//  iOS-FakeNFT-Extended
+
 import SwiftUI
 
 struct CatalogView: View {
@@ -24,25 +28,27 @@ struct CatalogView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                if viewModel.isLoading {
+                // Основной контент - всегда видим
+                List(viewModel.sortedCollections) { catalogCollectionItem in
+                    Button {
+                        path.append(catalogCollectionItem)
+                    } label: {
+                        CollectionRow(catalogCollectionItem: catalogCollectionItem)
+                    }
+                    .buttonStyle(.plain)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                    .listRowBackground(Color.clear)
+                }
+                .listStyle(.plain)
+                .refreshable {
+                    await viewModel.loadCollections()
+                }
+                
+                // Индикатор загрузки поверх контента
+                if viewModel.isLoading && viewModel.sortedCollections.isEmpty {
                     ProgressView()
                         .scaleEffect(1.5)
-                } else {
-                    List(viewModel.sortedCollections) { catalogCollectionItem in
-                        Button {
-                            path.append(catalogCollectionItem)
-                        } label: {
-                            CollectionRow(catalogCollectionItem: catalogCollectionItem)
-                        }
-                        .buttonStyle(.plain)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                        .listRowBackground(Color.clear)
-                    }
-                    .listStyle(.plain)
-                    .refreshable {
-                        await viewModel.loadCollections()
-                    }
                 }
             }
             .navigationDestination(for: CatalogCollectionItem.self) { catalogCollectionItem in
@@ -96,4 +102,3 @@ struct CatalogView_Previews: PreviewProvider {
         return CatalogView(viewModel: mockVM)
     }
 }
-
