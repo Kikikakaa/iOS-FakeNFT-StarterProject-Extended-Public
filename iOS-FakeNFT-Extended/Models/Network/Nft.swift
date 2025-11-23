@@ -8,6 +8,10 @@ struct Nft: Codable, Identifiable, Hashable {
     let price: Double
     let author: String
     
+    var uniqueId: String {
+         return "\(id)-\(name)"
+    }
+    
     static func == (lhs: Nft, rhs: Nft) -> Bool {
         return lhs.id == rhs.id
     }

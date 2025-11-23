@@ -31,6 +31,11 @@ final class CollectionDetailViewModel: ObservableObject {
             
             let (fetchedNFTs, fetchedAuthor) = try await (nftsTask, authorTask)
             
+            print("Загружено NFT: \(fetchedNFTs.count)")
+            fetchedNFTs.forEach { nft in
+                print("NFT: \(nft.name), images: \(nft.images.count)")
+            }
+            
             self.nfts = fetchedNFTs
             self.author = fetchedAuthor
         } catch {

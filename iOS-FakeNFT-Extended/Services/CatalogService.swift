@@ -38,9 +38,24 @@ final class CatalogService: CatalogServiceProtocol {
         let request = NFTsByCollectionRequest(collectionId: collectionId)
         let collectionDetail: CatalogCollectionItem = try await networkClient.send(request: request)
         
+        print("=== Collection Detail ===")
+        print("Collection ID: \(collectionDetail.id)")
+        print("Collection Name: \(collectionDetail.name)")
+        print("Author: \(collectionDetail.author)")
+        print("Cover: \(collectionDetail.cover)")
+        print("Description: \(collectionDetail.description)")
+        print("NFTs count: \(collectionDetail.nfts.count)")
+        print("=========================")
+        
+        let authorName = collectionDetail.author
+        
+        // Создаем базовый URL на основе имени автора
+        // Замените это на реальный endpoint когда будет доступен
+        let websiteURL = URL(string: "https://example.com/artist/\(authorName.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "")")!
+        
         return Author(
-            name: collectionDetail.author,
-            website: URL(string: "https://example.com/artist")! // Заглушка, нужно уточнить API
+            name: authorName,
+            website: websiteURL
         )
     }
 }

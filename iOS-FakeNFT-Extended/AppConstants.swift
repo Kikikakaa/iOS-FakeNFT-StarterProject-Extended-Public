@@ -21,15 +21,20 @@ enum AppConstants {
     
     // MARK: - NFTGridCell
     enum NFTGridCell {
+        static let cardSize: CGSize = CGSize(width: 108, height: 192)
+        static let imageSize: CGSize = CGSize(width: 108, height: 108)
+        static let infoBlockSize: CGSize = CGSize(width: 108, height: 40)
         static let imageHeight: CGFloat = 140
         static let cornerRadius: CGFloat = 12
         static let padding: CGFloat = 8
         static let starSize: CGFloat = 12
+        static let iconSize: CGFloat = 16
+        static let likeButtonSize: CGFloat = 32
         
         // Шрифты
-        static let titleFontSize: CGFloat = 14
-        static let priceFontSize: CGFloat = 14
-        static let labelFontSize: CGFloat = 12
+        static let titleFontSize: CGFloat = 17
+        static let priceFontSize: CGFloat = 10
+        static let labelFontSize: CGFloat = 10
     }
     
     // MARK: - NFTGridView
