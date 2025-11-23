@@ -53,7 +53,7 @@ struct CatalogView: View {
                     Button {
                         showingSortOptions = true
                     } label: {
-                        Image("sort_button")
+                        Image(.sortButton)
                     }
                 }
             }
