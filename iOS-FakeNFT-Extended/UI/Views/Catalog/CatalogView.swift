@@ -53,6 +53,7 @@ struct CatalogView: View {
             }
             .navigationDestination(for: CatalogCollectionItem.self) { catalogCollectionItem in
                 CollectionDetailView(catalogCollectionItem: catalogCollectionItem)
+                    .toolbar(.hidden, for: .tabBar)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
