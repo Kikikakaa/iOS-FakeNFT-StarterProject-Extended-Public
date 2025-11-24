@@ -10,12 +10,18 @@ struct CurrencyGridItem: View {
         Button(action: onTap) {
             
             HStack(spacing: 4) {
-                
-                KFImage(URL(string: currency.imageUrl))
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 36, height: 36)
-                    .clipShape(Circle())
+                ZStack {
+                    
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.black)
+                        .frame(width: 36, height: 36)
+                    
+                    KFImage(URL(string: currency.imageUrl))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 36, height: 36)
+                        .clipShape(Circle())
+                }
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(currency.title)
@@ -32,6 +38,10 @@ struct CurrencyGridItem: View {
             .frame(maxWidth: .infinity, maxHeight: 46, alignment: .leading)
             .background(.lightGray)
             .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? Color.ypBlack : Color.clear, lineWidth: 1)
+            )
         }
         .buttonStyle(.plain)
     }
