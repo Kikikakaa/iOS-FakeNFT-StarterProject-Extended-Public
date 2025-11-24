@@ -10,6 +10,7 @@ final class CartViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var sortOption: SortOption? = nil
 
+    static let shared = CartViewModel()
     private let client = DefaultNetworkClient()
     private let orderId = "1"
 
@@ -81,20 +82,29 @@ final class CartViewModel: ObservableObject {
             print("Remove error: \(error)")
         }
     }
-
-    func clearCart() async {
+    
+    func clearCart() async throws {
         isLoading = true
+        defer { isLoading = false }
+        
         do {
+            // отправляем PUT /orders/1 c пустым списком
             let _: OrderResponse = try await client.send(
                 request: UpdateOrderRequest(nfts: [])
             )
-            cartItems = []
-            cartItemsCount = 0
-            total = 0
+            
+            // локально очищаем корзину
+            self.cartItems = []
+            self.cartItemsCount = 0
+            self.total = 0
+            self.errorMessage = nil
+            
         } catch {
-            errorMessage = "Ошибка очистки"
+            // важное — пробрасываем ошибку наружу
+            print("Clear cart error: \(error)")
+            self.errorMessage = "Ошибка очистки корзины"
+            throw error
         }
-        isLoading = false
     }
 }
 

@@ -2,10 +2,10 @@ import SwiftUI
 import Kingfisher
 
 struct CartListView: View {
-    @StateObject private var vm = CartViewModel()
+    @StateObject private var vm = CartViewModel.shared
     @State private var showSort = false
     @State private var itemToDelete: NFTItem? = nil
-    @State private var showPaymentSheet = false
+    @State private var showPayment = false
     
     var body: some View {
         NavigationStack {
@@ -52,6 +52,9 @@ struct CartListView: View {
         .overlay(errorOverlay, alignment: .center)
         .overlay(deleteOverlay)
         .overlay(sortOverlay)
+        .fullScreenCover(isPresented: $showPayment) {
+            PaymentMethodView()
+        }
     }
     
     // MARK: - Подвиды
@@ -80,8 +83,8 @@ struct CartListView: View {
             }
             .frame(alignment: .leading)
             
-            NavigationLink {
-                PaymentMethodView()
+            Button {
+                showPayment = true
             } label: {
                 Text("К оплате")
                     .font(.bodyBold)

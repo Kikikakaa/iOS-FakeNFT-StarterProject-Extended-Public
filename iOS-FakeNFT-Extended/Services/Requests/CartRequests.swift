@@ -31,12 +31,18 @@ struct UpdateOrderRequest: NetworkRequest {
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod.rawValue
         
-        let bodyString = nfts.map { "nfts=\($0)" }.joined(separator: "&")
-        request.httpBody = bodyString.data(using: .utf8)
+        if nfts.isEmpty {
+            request.httpBody = "".data(using: .utf8)
+        } else {
+            let bodyString = nfts.map { "nfts=\($0)" }.joined(separator: "&")
+            request.httpBody = bodyString.data(using: .utf8)
+        }
         
-        request.setValue("application/x-www-form-urlencoded; charset=utf-8",
-                         forHTTPHeaderField: "Content-Type")
+
+        
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
         
         return request
     }
@@ -55,3 +61,5 @@ struct GetNFTRequest: NetworkRequest {
         URL(string: "\(RequestConstants.baseURL)/api/v1/nft/\(id)")
     }
 }
+
+extension UpdateOrderRequest: CustomURLRequestProvider { }

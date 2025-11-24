@@ -6,6 +6,9 @@ import SwiftUI
 struct PaymentMethodView: View {
     @StateObject private var vm: PaymentMethodViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var showSuccess = false
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     init() {
         self._vm = StateObject(wrappedValue: PaymentMethodViewModel())
@@ -17,7 +20,7 @@ struct PaymentMethodView: View {
     ]
     
     var body: some View {
-        NavigationStack {
+        
             VStack(spacing: 0) {
                 LazyVGrid(columns: columns, spacing: 7) {
                     ForEach(vm.currencies.prefix(8)) { currency in
@@ -47,11 +50,24 @@ struct PaymentMethodView: View {
                         .multilineTextAlignment(.leading)
                         .padding(.top, 4)
                     
-                    Button(action: {
-                        if let cur = vm.selectedCurrency {
-                            print("Оплатить через: \(cur.name)")
+                    Button {
+                        guard let currency = vm.selectedCurrency else { return }
+                        
+                        Task {
+                            do {
+                                try await CartViewModel.shared.clearCart()
+                                
+                                await MainActor.run {
+                                    showSuccess = true
+                                }
+                            } catch {
+                                await MainActor.run {
+                                    errorMessage = "Ошибка оплаты"
+                                    showError = true
+                                }
+                            }
                         }
-                    }) {
+                    } label: {
                         Text("Оплатить")
                             .font(.bodyBold)
                             .foregroundColor(.white)
@@ -81,7 +97,15 @@ struct PaymentMethodView: View {
                 }
             }
             .task { await vm.loadCurrencies() }
-        }
+            .fullScreenCover(isPresented: $showSuccess) {
+                PaymentSuccessView(onClose: {dismiss()} )
+            }
+            .alert("Ошибка", isPresented: $showError) {
+                Button("OK") { }
+            } message: {
+                Text(errorMessage)
+            }
+        
     }
 }
 
