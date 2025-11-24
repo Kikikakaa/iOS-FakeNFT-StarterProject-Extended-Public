@@ -42,33 +42,38 @@ struct NFTGridCell: View {
                     )
                 )
 
-                // Кнопка лайка
                 Button(action: {
                     isLiked.toggle()
                 }) {
-                    (Image(isLiked ? .active : .noActive))
+                    ZStack {
+                        // Прозрачный квадрат для тапа 42x42
+                        Rectangle()
+                            .fill(Color.clear)
+                            .frame(width: 42, height: 42)
+                        
+                        // Картинка лайка по центру
+                        Image(isLiked ? .active : .noActive)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 42, height: 42)
+                    }
+                }
+            }
+
+            // Рейтинг (звездочки из ассетов)
+            HStack(spacing: 2) {
+                ForEach(1...5, id: \.self) { star in
+                    Image(star <= nft.rating ? .activeStars : .noActiveStars)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(
-                            width: AppConstants.NFTGridCell.likeButtonSize,
-                            height: AppConstants.NFTGridCell.likeButtonSize
+                            width: AppConstants.NFTGridCell.starSize,
+                            height: AppConstants.NFTGridCell.starSize
                         )
                 }
-                .padding(4)
             }
 
-            // Рейтинг (звездочки)
-            HStack(spacing: 2) {
-                ForEach(1...5, id: \.self) { star in
-                    Image(systemName: star <= nft.rating ? "star.fill" : "star")
-                        .foregroundColor(star <= nft.rating ? .yellow : .gray)
-                        .font(.system(size: AppConstants.NFTGridCell.starSize))
-                }
-            }
-
-            // Информационный блок (108x40)
             ZStack {
-                // Фон блока
                 Rectangle()
                     .fill(Color.clear)
                     .frame(
@@ -77,9 +82,7 @@ struct NFTGridCell: View {
                     )
 
                 HStack(alignment: .center, spacing: 0) {
-
                     VStack(alignment: .leading, spacing: 2) {
-
                         Text(nft.name)
                             .font(
                                 .system(
@@ -98,15 +101,13 @@ struct NFTGridCell: View {
                                         .priceFontSize,
                                     weight: .medium
                                 )
-                            )  // ← Medium 500
+                            )
                             .foregroundColor(.primary)
                     }
 
                     Spacer()
 
-                    // Правая часть - кнопка корзины
                     Button(action: {
-                        // Действие добавления в корзину
                         print("Добавить в корзину: \(nft.name)")
                     }) {
                         Image(.trash)

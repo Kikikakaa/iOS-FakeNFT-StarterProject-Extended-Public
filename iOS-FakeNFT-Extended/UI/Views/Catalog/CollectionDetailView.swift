@@ -1,7 +1,7 @@
 //
 //  CollectionDetailView.swift
 //  iOS-FakeNFT-Extended
-//
+
 import SwiftUI
 
 struct CollectionDetailView: View {
@@ -21,7 +21,7 @@ struct CollectionDetailView: View {
                     // Обложка
                     ZStack(alignment: .topLeading) {
                         coverImage
-                            .frame(width: geo.size.width, height: geo.size.height * 0.4)
+                            .frame(width: geo.size.width, height: 310)
                             .clipped()
                         
                         // Кнопка назад с прозрачным фоном
@@ -35,9 +35,12 @@ struct CollectionDetailView: View {
                                 .background(Color.black.opacity(0.3))
                                 .clipShape(Circle())
                         }
-                        .padding(.top, 60) // Отступ от верха безопасной зоны
+                        .padding(.top, 60)
                         .padding(.leading, 16)
                     }
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 12)
+                    )
                     
                     // Контент под обложкой
                     VStack(alignment: .leading, spacing: 16) {
@@ -54,29 +57,25 @@ struct CollectionDetailView: View {
                         }
                         
                         Text(catalogCollectionItem.description)
-                            .font(.body)
+                            .font(.system(size: 13))
                             .foregroundColor(.primary)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 20) // Отступ от обложки
+                    .padding(.top, 20)
                     
                     // Сетка NFT
                     if !viewModel.nfts.isEmpty {
-                        Text("NFT коллекции")
-                            .font(.system(size: 20, weight: .bold))
-                            .padding(.horizontal, 16)
-                            .padding(.top, 24)
-                        
-                        NFTGridView(nfts: viewModel.nfts)
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 20)
-                    }
+                         NFTGridView(nfts: viewModel.nfts)
+                             .padding(.horizontal, AppConstants.CollectionDetail.horizontalPadding)
+                             .padding(.top, 24)
+                             .padding(.bottom, AppConstants.CollectionDetail.bottomPadding)
+                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-            } // ScrollView
-            .edgesIgnoringSafeArea(.top) // Обложка игнорирует safe area
-        } // GeometryReader
-        .navigationBarHidden(true) // Скрываем навигационную панель полностью
+            }
+            .edgesIgnoringSafeArea(.top)
+        }
+        .navigationBarHidden(true)
         .overlay {
             if viewModel.isLoading {
                 ProgressView()

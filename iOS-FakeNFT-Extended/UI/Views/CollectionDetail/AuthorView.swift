@@ -7,23 +7,15 @@ import SwiftUI
 struct AuthorView: View {
     let author: Author
     
-    @State private var showSafari = false
-    
     var body: some View {
-        Button(action: {
-            showSafari = true
-        }) {
-            HStack {
-                Text("Автор: \(author.name)")
-                    .font(.subheadline)
-                    .foregroundColor(.blue)
-                Image(systemName: "link")
-                    .font(.system(size: 12))
-                    .foregroundColor(.blue)
-            }
-        }
-        .sheet(isPresented: $showSafari) {
-            SafariView(url: author.website)
+        HStack(spacing: 4) {
+            Text("Автор коллекции:")
+                .font(.system(size: AppConstants.AuthorView.labelFontSize, weight: .medium))
+                .foregroundColor(.black)
+            
+            Text(author.name)
+                .font(.system(size: AppConstants.AuthorView.nameFontSize, weight: .regular))
+                .foregroundColor(AppConstants.Colors.blueUniversal)
         }
     }
 }
