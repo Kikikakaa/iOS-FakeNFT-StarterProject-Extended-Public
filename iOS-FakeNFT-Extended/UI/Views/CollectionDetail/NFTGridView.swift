@@ -15,7 +15,7 @@ struct NFTGridView: View {
     
     var body: some View {
         LazyVGrid(columns: columns, spacing: 16) {
-            ForEach(nfts, id: \.uniqueId) { nft in  // ← используем uniqueId
+            ForEach(nfts, id: \.guaranteedUniqueId) { nft in
                 NFTGridCell(nft: nft)
             }
         }

@@ -29,7 +29,14 @@ final class CollectionDetailViewModel: ObservableObject {
             async let nftsTask = catalogService.fetchNFTs(for: collectionId)
             async let authorTask = catalogService.fetchAuthor(for: collectionId)
             
+            print("=====================")
+            
             let (fetchedNFTs, fetchedAuthor) = try await (nftsTask, authorTask)
+            
+            print("=== DEBUG NFT IDs ===")
+            for (index, nft) in fetchedNFTs.enumerated() {
+                print("NFT \(index): \(nft.name), ID: \(nft.id)")
+            }
             
             print("Загружено NFT: \(fetchedNFTs.count)")
             fetchedNFTs.forEach { nft in
