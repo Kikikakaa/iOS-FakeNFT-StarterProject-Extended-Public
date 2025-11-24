@@ -38,7 +38,5 @@ struct PaymentSuccessView: View {
 
 
 #Preview {
-    PaymentSuccessView {
-        
-    }
+    PaymentSuccessView {}
 }

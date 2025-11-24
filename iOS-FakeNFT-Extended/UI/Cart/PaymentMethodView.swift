@@ -20,7 +20,7 @@ struct PaymentMethodView: View {
     ]
     
     var body: some View {
-        
+        NavigationStack {
             VStack(spacing: 0) {
                 LazyVGrid(columns: columns, spacing: 7) {
                     ForEach(vm.currencies.prefix(8)) { currency in
@@ -105,7 +105,7 @@ struct PaymentMethodView: View {
             } message: {
                 Text(errorMessage)
             }
-        
+        }
     }
 }
 
