@@ -53,6 +53,7 @@ struct CatalogView: View {
             }
             .navigationDestination(for: CatalogCollectionItem.self) { catalogCollectionItem in
                 CollectionDetailView(catalogCollectionItem: catalogCollectionItem)
+                    .toolbar(.hidden, for: .tabBar)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -96,6 +97,7 @@ struct CollectionDetailStubView: View {
 struct CatalogView_Previews: PreviewProvider {
     static var previews: some View {
         let mockVM = CatalogViewModel(catalogService: MockCatalogService())
+        // Используем моковые данные из MockCatalogData
         mockVM.collections = MockCatalogData.catalogCollections
         mockVM.isLoading = false
 
