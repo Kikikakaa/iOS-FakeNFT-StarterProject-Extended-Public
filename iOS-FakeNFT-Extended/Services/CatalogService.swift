@@ -49,9 +49,8 @@ final class CatalogService: CatalogServiceProtocol {
         
         let authorName = collectionDetail.author
         
-        // Создаем базовый URL на основе имени автора
-        // Замените это на реальный endpoint когда будет доступен
-        let websiteURL = URL(string: "https://example.com/artist/\(authorName.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "")")!
+        // Создаем базовый URL на основе имени автора // Не нашел ссылку на автора в апи, в Фигме указана страница курса
+        let websiteURL = URL(string: "https://practicum.yandex.ru/ios-developer/?ysclid=miemx8dhnq911229428")!
         
         return Author(
             name: authorName,
