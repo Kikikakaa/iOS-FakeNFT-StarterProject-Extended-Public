@@ -17,7 +17,6 @@ protocol CustomURLRequestProvider {
     func asURLRequest() throws -> URLRequest
 }
 
-
 actor DefaultNetworkClient: NetworkClient {
     private let session: URLSession
     private let decoder: JSONDecoder
@@ -54,12 +53,10 @@ actor DefaultNetworkClient: NetworkClient {
 
     private func create(request: NetworkRequest) throws -> URLRequest {
 
-        // 1. Если у request есть свой asURLRequest() — используем его
         if let custom = request as? (any CustomURLRequestProvider) {
             return try custom.asURLRequest()
         }
 
-        // 2. Иначе стандартное поведение
         guard let endpoint = request.endpoint else {
             throw NetworkClientError.incorrectRequest("Empty endpoint")
         }
@@ -77,7 +74,6 @@ actor DefaultNetworkClient: NetworkClient {
 
         return urlRequest
     }
-
 
     private func parse<T: Decodable>(data: Data) async throws -> T {
         do {

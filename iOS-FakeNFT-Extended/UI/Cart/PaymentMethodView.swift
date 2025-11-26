@@ -62,7 +62,7 @@ struct PaymentMethodView: View {
                                 }
                             } catch {
                                 await MainActor.run {
-                                    errorMessage = "Ошибка оплаты"
+                                    errorMessage = "Не удалось произвести оплату"
                                     showError = true
                                 }
                             }

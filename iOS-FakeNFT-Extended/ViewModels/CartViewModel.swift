@@ -1,19 +1,30 @@
-import Foundation
+import SwiftUI
 import Combine
 
 @MainActor
 final class CartViewModel: ObservableObject {
+    @AppStorage("selectedSortOption") private var savedSortOption: String = SortOption.priceAscending.rawValue
     @Published var cartItems: [NFTItem] = []
     @Published var cartItemsCount: Int = 0
     @Published var total: Double = 0.0
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var sortOption: SortOption? = nil
+    @Published var sortOption: SortOption = .priceAscending {
+        didSet {
+            savedSortOption = sortOption.rawValue
+        }
+    }
 
     static let shared = CartViewModel()
     private let client = DefaultNetworkClient()
     private let orderId = "1"
 
+    init() {
+        if let saved = SortOption(rawValue: savedSortOption) {
+            self.sortOption = saved
+        }
+    }
+    
     func loadCart() async {
         isLoading = true
         errorMessage = nil
@@ -146,8 +157,6 @@ extension CartViewModel {
             return cartItems.sorted { ($0.rating ?? 0) > ($1.rating ?? 0) }
         case .name:
             return cartItems.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        case .none:
-            return cartItems
         }
     }
 }
