@@ -17,7 +17,16 @@ struct ProfileListRow: View {
             }
             
             Spacer()
+            
+            Image("Chevron.forward")
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .frame(width: 8, height: 14)
+                .foregroundStyle(Color(uiColor: .label))
+                .padding(.leading, 16)
         }
         .padding(.vertical, 16)
+        .contentShape(Rectangle())
     }
 }

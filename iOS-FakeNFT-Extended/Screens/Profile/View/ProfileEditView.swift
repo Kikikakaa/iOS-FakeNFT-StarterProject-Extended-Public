@@ -1,178 +1,168 @@
 import SwiftUI
 
 struct ProfileEditView: View {
-    @ObservedObject var viewModel: ProfileViewModel
-    let profileService: ProfileService
+    @StateObject var viewModel: ProfileEditViewModel
     @Binding var isPresented: Bool
     
-    @State private var name: String = ""
-    @State private var description: String = ""
-    @State private var website: String = ""
-    @State private var avatarURL: URL?
-    
-    // Состояние для алерта смены URL
-    @State private var isShowingUrlAlert = false
-    @State private var avatarUrlInput = ""
-    
-    // Состояние для алерта выхода
-    @State private var isShowingExitAlert = false
-    
-    private var hasChanges: Bool {
-        guard let profile = viewModel.profile else { return false }
-        return name != profile.name ||
-        description != profile.description ||
-        website != (profile.websiteURL?.absoluteString ?? "") ||
-        avatarURL != profile.avatarURL
+    init(profile: ProfileModel?, service: ProfileService, isPresented: Binding<Bool>, onUpdate: @escaping (ProfileModel) -> Void) {
+        self._isPresented = isPresented
+        let vm = ProfileEditViewModel(profile: profile, service: service)
+        vm.onProfileUpdated = onUpdate
+        self._viewModel = StateObject(wrappedValue: vm)
     }
     
     var body: some View {
         ZStack {
-            Color(uiColor: .systemBackground)
-                .ignoresSafeArea()
+            Color(uiColor: .systemBackground).ignoresSafeArea()
             
             VStack(spacing: 24) {
-                // --- Верхняя панель ---
-                HStack {
-                    Button {
-                        // ЛОГИКА ВЫХОДА
-                        if hasChanges {
-                            isShowingExitAlert = true
-                        } else {
-                            isPresented = false
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(Color(uiColor: .label))
-                            .font(.system(size: 24, weight: .bold))
-                            .padding(12)
-                    }
-                    Spacer()
-                }
-                .padding(.horizontal, 4)
-                
-                // --- Аватарка с кнопкой ---
-                Button {
-                    isShowingUrlAlert = true
-                } label: {
-                    ZStack {
-                        AsyncImage(url: avatarURL) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .foregroundStyle(.gray)
-                        }
-                        .frame(width: 70, height: 70)
-                        .clipShape(Circle())
-                        
-                        Color.black.opacity(0.6)
-                            .clipShape(Circle())
-                            .frame(width: 70, height: 70)
-                        
-                        Text("Изменить\nфото")
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
-                    }
-                }
-                
-                // --- Поля ввода ---
-                ScrollView {
-                    VStack(spacing: 24) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Имя")
-                                .font(.headline)
-                            TextField("Введите имя", text: $name)
-                                .textFieldStyle(.roundedBorder)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Описание")
-                                .font(.headline)
-                            TextField("Расскажите о себе", text: $description, axis: .vertical)
-                                .textFieldStyle(.roundedBorder)
-                                .lineLimit(3...6)
-                        }
-                        
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Сайт")
-                                .font(.headline)
-                            TextField("Ссылка на сайт", text: $website)
-                                .textFieldStyle(.roundedBorder)
-                                .keyboardType(.URL)
-                                .autocapitalization(.none)
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                }
-                
+                headerView
+                avatarView
+                fieldsView
                 Spacer()
-                
-                // --- Кнопка Сохранить ---
-                if hasChanges {
-                    Button {
-                        saveProfile()
-                    } label: {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .tint(Color(uiColor: .systemBackground))
-                        } else {
-                            Text("Сохранить")
-                                .font(.system(size: 17, weight: .bold))
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 60)
-                    .background(Color(uiColor: .label))
-                    .foregroundStyle(Color(uiColor: .systemBackground))
-                    .cornerRadius(16)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
-                    .transition(.opacity)
-                }
+                saveButton
             }
         }
-        .onAppear {
-            if let currentProfile = viewModel.profile {
-                self.name = currentProfile.name
-                self.description = currentProfile.description
-                self.website = currentProfile.websiteURL?.absoluteString ?? ""
-                self.avatarURL = currentProfile.avatarURL
-            }
-        }
-        .animation(.easeInOut, value: hasChanges)
-        
-        // Алерт для смены фото
-        .alert("Введите ссылку на фото", isPresented: $isShowingUrlAlert) {
-            TextField("URL", text: $avatarUrlInput)
-            Button("ОК") {
-                if let url = URL(string: avatarUrlInput), !avatarUrlInput.isEmpty {
-                    self.avatarURL = url
-                }
-            }
-            Button("Отмена", role: .cancel) {}
-        }
-        
-        // Алерт для подтверждения выхода
-        .alert("Уверены, что хотите выйти?", isPresented: $isShowingExitAlert) {
-            // Кнопка "Остаться" - роль .cancel
+        // 1. Алерт выхода
+        .alert("Уверены, что хотите выйти?", isPresented: $viewModel.isShowingExitAlert) {
             Button("Остаться", role: .cancel) { }
-            Button("Выйти") {
-                isPresented = false
+            Button("Выйти") { isPresented = false }
+        }
+        
+        // 2. Шторка (ActionSheet)
+        .actionSheet(isPresented: $viewModel.isShowingImagePickerActionSheet) {
+            ActionSheet(
+                title: Text("Фото профиля"),
+                buttons: [
+                    .default(Text("Изменить фото")) {
+                        viewModel.isShowingUrlInputAlert = true
+                    },
+                    .destructive(Text("Удалить фото")) {
+                        viewModel.deleteAvatar()
+                    },
+                    .cancel(Text("Отмена"))
+                ]
+            )
+        }
+        
+        // 3. Алерт для ввода ссылки (вызывается из шторки)
+        .alert("Ссылка на фото", isPresented: $viewModel.isShowingUrlInputAlert) {
+            TextField("URL", text: $viewModel.avatarUrlInput)
+            Button("Сохранить") { viewModel.updateAvatar(from: viewModel.avatarUrlInput) }
+            Button("Отмена", role: .cancel) { }
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    private var headerView: some View {
+        HStack {
+            Button {
+                if viewModel.hasChanges {
+                    viewModel.isShowingExitAlert = true
+                } else {
+                    isPresented = false
+                }
+            } label: {
+                Image("Backward")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 16, height: 16)
+                    .foregroundStyle(Color(uiColor: .label))
+                    .padding(.leading, 16)
+                    .padding(.top, 16)
+            }
+            Spacer()
+        }
+    }
+    
+    private var avatarView: some View {
+        Button {
+            viewModel.isShowingImagePickerActionSheet = true
+        } label: {
+            ZStack(alignment: .bottomTrailing) {
+                
+                // 1. Основная аватарка
+                AsyncImage(url: viewModel.avatarURL) { image in
+                    image.resizable().scaledToFill()
+                } placeholder: {
+                    Image(systemName: "person.circle.fill")
+                        .resizable().foregroundStyle(.gray)
+                }
+                .frame(width: 70, height: 70)
+                .clipShape(Circle())
+                
+                // 2. Кружок с камерой поверх аватарки
+                Image("Union")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 14, height: 14)
+                    .padding(8)
+                    .background(Color(uiColor: UIColor(hexString: "F7F7F8")))
+                    .clipShape(Circle())
+                    .offset(x: 4, y: 4)
             }
         }
     }
     
-    private func saveProfile() {
-        viewModel.updateProfile(
-            service: profileService,
-            newName: name,
-            newDescription: description,
-            newWebsite: website,
-            newAvatar: avatarURL
-        )
-        isPresented = false
+    private var fieldsView: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                makeTextField(title: "Имя", text: $viewModel.name)
+                makeTextField(title: "Описание", text: $viewModel.description, axis: .vertical)
+                makeTextField(title: "Сайт", text: $viewModel.website)
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+    
+    private func makeTextField(title: String, text: Binding<String>, axis: Axis = .horizontal) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.system(size: 22, weight: .bold))
+                .foregroundStyle(Color(uiColor: .label))
+            
+            TextField("", text: text, axis: axis)
+                .font(.system(size: 17, weight: .regular))
+                .kerning(-0.41)
+                .padding(16)
+                .background(Color(uiColor: UIColor(hexString: "F7F7F8")))
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.clear, lineWidth: 0)
+                )
+                .lineLimit(axis == .vertical ? 3...6 : 1...1)
+                .autocapitalization(.none)
+        }
+    }
+    
+    private var saveButton: some View {
+        Group {
+            if viewModel.hasChanges {
+                Button {
+                    Task {
+                        if await viewModel.saveProfile() {
+                            isPresented = false
+                        }
+                    }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView().tint(Color(uiColor: .systemBackground))
+                    } else {
+                        Text("Сохранить").font(.system(size: 17, weight: .bold))
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 60)
+                .background(Color(uiColor: .label))
+                .foregroundStyle(Color(uiColor: .systemBackground))
+                .cornerRadius(16)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+            }
+        }
+        .animation(.easeInOut, value: viewModel.hasChanges)
     }
 }
