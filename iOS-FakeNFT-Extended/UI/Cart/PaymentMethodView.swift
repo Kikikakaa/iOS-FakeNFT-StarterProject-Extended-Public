@@ -51,22 +51,7 @@ struct PaymentMethodView: View {
                         .padding(.top, 4)
                     
                     Button {
-                        guard let currency = vm.selectedCurrency else { return }
-                        
-                        Task {
-                            do {
-                                try await CartViewModel.shared.clearCart()
-                                
-                                await MainActor.run {
-                                    showSuccess = true
-                                }
-                            } catch {
-                                await MainActor.run {
-                                    errorMessage = "Не удалось произвести оплату"
-                                    showError = true
-                                }
-                            }
-                        }
+                     pay()
                     } label: {
                         Text("Оплатить")
                             .font(.bodyBold)
@@ -100,10 +85,40 @@ struct PaymentMethodView: View {
             .fullScreenCover(isPresented: $showSuccess) {
                 PaymentSuccessView(onClose: {dismiss()} )
             }
-            .alert("Ошибка", isPresented: $showError) {
-                Button("OK") { }
-            } message: {
-                Text(errorMessage)
+            .overlay(
+                CustomAlert(
+                    isPresented: $showError,
+                    onCancel: { },
+                    onRetry: { pay() }
+                ) {
+                    VStack(spacing: 0) {
+                        Text("Не удалось произвести")
+                            .font(.headline.weight(.semibold))
+                            .multilineTextAlignment(.center)
+
+                        Text("оплату")
+                            .font(.headline.weight(.semibold))
+                            .multilineTextAlignment(.center)
+                    }
+                }
+            )
+
+
+        }
+    }
+    
+   private func pay() {
+        guard let currency = vm.selectedCurrency else { return }
+
+        Task {
+            do {
+                try await CartViewModel.shared.clearCart()
+                await MainActor.run { showSuccess = true }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Не удалось произвести оплату"
+                    showError = true
+                }
             }
         }
     }
