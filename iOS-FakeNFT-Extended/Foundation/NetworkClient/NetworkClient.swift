@@ -13,6 +13,10 @@ protocol NetworkClient {
     func send<T: Decodable>(request: NetworkRequest) async throws -> T
 }
 
+protocol CustomURLRequestProvider {
+    func asURLRequest() throws -> URLRequest
+}
+
 actor DefaultNetworkClient: NetworkClient {
     private let session: URLSession
     private let decoder: JSONDecoder

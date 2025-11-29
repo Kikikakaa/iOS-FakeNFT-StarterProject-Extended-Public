@@ -25,4 +25,10 @@ final class ServicesAssembly {
     var catalogService: CatalogServiceProtocol {
         CatalogService(networkClient: networkClient)
     }
+    
+    var profileService: ProfileService {
+        ProfileServiceImpl(
+            networkClient: networkClient
+        )
+    }
 }
