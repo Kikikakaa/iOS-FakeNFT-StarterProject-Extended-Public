@@ -8,12 +8,21 @@ struct CollectionDetailView: View {
     let catalogCollectionItem: CatalogCollectionItem
     @StateObject private var viewModel: CollectionDetailViewModel
     @Environment(\.dismiss) private var dismiss
-    
-    init(catalogCollectionItem: CatalogCollectionItem) {
+    @ObservedObject var cartViewModel: CartViewModel
+
+    init(
+        catalogCollectionItem: CatalogCollectionItem,
+        cartViewModel: CartViewModel
+    ) {
         self.catalogCollectionItem = catalogCollectionItem
-        _viewModel = StateObject(wrappedValue: CollectionDetailViewModel(collectionId: catalogCollectionItem.id))
+        self.cartViewModel = cartViewModel
+        _viewModel = StateObject(
+            wrappedValue: CollectionDetailViewModel(
+                collectionId: catalogCollectionItem.id
+            )
+        )
     }
-    
+
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -23,7 +32,7 @@ struct CollectionDetailView: View {
                         coverImage
                             .frame(width: geo.size.width, height: 310)
                             .clipped()
-                        
+
                         // Кнопка назад с прозрачным фоном
                         Button(action: {
                             dismiss()
@@ -41,13 +50,13 @@ struct CollectionDetailView: View {
                     .clipShape(
                         RoundedRectangle(cornerRadius: 12)
                     )
-                    
+
                     // Контент под обложкой
                     VStack(alignment: .leading, spacing: 16) {
                         Text(catalogCollectionItem.name)
                             .font(.system(size: 22, weight: .bold))
                             .foregroundColor(.primary)
-                        
+
                         if let author = viewModel.author {
                             AuthorView(author: author)
                         } else {
@@ -55,21 +64,30 @@ struct CollectionDetailView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
-                        
+
                         Text(catalogCollectionItem.description)
                             .font(.system(size: 13))
                             .foregroundColor(.primary)
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 20)
-                    
+
                     // Сетка NFT
                     if !viewModel.nfts.isEmpty {
-                         NFTGridView(nfts: viewModel.nfts)
-                             .padding(.horizontal, AppConstants.CollectionDetail.horizontalPadding)
-                             .padding(.top, 24)
-                             .padding(.bottom, AppConstants.CollectionDetail.bottomPadding)
-                     }
+                        NFTGridView(
+                            nfts: viewModel.nfts,
+                            cartViewModel: cartViewModel
+                        )
+                        .padding(
+                            .horizontal,
+                            AppConstants.CollectionDetail.horizontalPadding
+                        )
+                        .padding(.top, 24)
+                        .padding(
+                            .bottom,
+                            AppConstants.CollectionDetail.bottomPadding
+                        )
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -86,7 +104,7 @@ struct CollectionDetailView: View {
             await viewModel.fetchData()
         }
     }
-    
+
     private var coverImage: some View {
         Group {
             if catalogCollectionItem.isLocalImage {
@@ -94,7 +112,8 @@ struct CollectionDetailView: View {
                     .resizable()
                     .scaledToFill()
             } else {
-                AsyncImage(url: URL(string: catalogCollectionItem.cover)) { phase in
+                AsyncImage(url: URL(string: catalogCollectionItem.cover)) {
+                    phase in
                     switch phase {
                     case .empty:
                         Rectangle()

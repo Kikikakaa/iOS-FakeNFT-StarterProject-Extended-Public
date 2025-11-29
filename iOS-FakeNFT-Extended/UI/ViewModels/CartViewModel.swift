@@ -16,7 +16,7 @@ final class CartViewModel: ObservableObject {
     }
 
     static let shared = CartViewModel()
-    private let client = DefaultNetworkClient()
+    let client = DefaultNetworkClient() // Убрал private для доступности в ext
     private let orderId = "1"
 
     init() {
