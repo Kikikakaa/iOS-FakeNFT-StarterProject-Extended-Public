@@ -4,7 +4,10 @@ struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
     @Environment(ServicesAssembly.self) private var servicesAssembly
     
+    // Состояния навигации
     @State private var isShowingEditSheet = false
+    @State private var isShowingWebView = false
+    @State private var webViewURL: URL?
     
     var body: some View {
         NavigationView {
@@ -15,6 +18,17 @@ struct ProfileView: View {
                 else if let profile = viewModel.profile {
                     headerView(profile: profile)
                     listView(profile: profile)
+                    
+                    // Скрытая ссылка для перехода на WebView
+                    NavigationLink(
+                        isActive: $isShowingWebView,
+                        destination: {
+                            if let url = webViewURL {
+                                AboutView(url: url)
+                            }
+                        },
+                        label: { EmptyView() }
+                    )
                 }
                 else {
                     Text("Не удалось загрузить профиль")
@@ -32,11 +46,10 @@ struct ProfileView: View {
         }
         .fullScreenCover(isPresented: $isShowingEditSheet) {
             ProfileEditView(
-                profile: viewModel.profile,               // 1. Передаем текущие данные
-                service: servicesAssembly.profileService, // 2. Передаем сервис
-                isPresented: $isShowingEditSheet,         // 3. Биндинг для закрытия
-                onUpdate: { updatedProfile in             // 4. Что делать, когда сохранили
-                    // Обновляем данные на главном экране мгновенно
+                profile: viewModel.profile,
+                service: servicesAssembly.profileService,
+                isPresented: $isShowingEditSheet,
+                onUpdate: { updatedProfile in
                     viewModel.profile = updatedProfile
                 }
             )
@@ -46,66 +59,74 @@ struct ProfileView: View {
     // MARK: - Private Subviews
     
     private func headerView(profile: ProfileModel) -> some View {
-        ProfileHeaderView(profile: profile)
-            .padding(.top, 20)
+        ProfileHeaderView(
+            profile: profile,
+            onWebsiteTap: { url in
+                // Открываем сайт Практикума (по ТЗ)
+                if let practicumURL = URL(string: "https://practicum.yandex.ru/ios-developer/") {
+                    self.webViewURL = practicumURL
+                    self.isShowingWebView = true
+                }
+            }
+        )
     }
     
     private func listView(profile: ProfileModel) -> some View {
-            List {
-                Section {
-                    // --- Мои NFT ---
-                    ZStack(alignment: .leading) {
-                        NavigationLink(destination:
-                            MyNFTsView(
-                                viewModel: MyNFTsViewModel(
-                                    profile: profile,
-                                    nftService: servicesAssembly.nftService,
-                                    profileService: servicesAssembly.profileService,
-                                    onProfileUpdate: { updatedProfile in
-                                        viewModel.profile = updatedProfile
-                                    }
-                                )
-                            )
-                        ) {
-                            EmptyView()
-                        }
-                        .opacity(0)
-                        
-                        ProfileListRow(
-                            title: NSLocalizedString("Profile.myNFTs", comment: ""),
-                            count: profile.nftsCount
-                        )
+        List {
+            Section {
+                // 1. Кнопка "Мои NFT"
+                ZStack(alignment: .leading) {
+                    NavigationLink(destination:
+                                    MyNFTsView(
+                                        viewModel: MyNFTsViewModel(
+                                            profile: profile,
+                                            nftService: servicesAssembly.nftService,
+                                            profileService: servicesAssembly.profileService,
+                                            onProfileUpdate: { updatedProfile in
+                                                viewModel.profile = updatedProfile
+                                            }
+                                        )
+                                    )
+                    ) {
+                        EmptyView()
                     }
-                    .listRowSeparator(.hidden)
+                    .opacity(0)
                     
-                    // --- Избранные NFT ---
-                    ZStack(alignment: .leading) {
-                        NavigationLink(destination:
-                            FavoriteNFTsView(
-                                viewModel: FavoriteNFTsViewModel(
-                                    profile: profile,
-                                    nftService: servicesAssembly.nftService,
-                                    profileService: servicesAssembly.profileService,
-                                    onProfileUpdate: { updatedProfile in // <--- Ловим обновление
-                                        viewModel.profile = updatedProfile
-                                    }
-                                )
-                            )
-                        ) {
-                            EmptyView()
-                        }
-                        .opacity(0)
-                        
-                        ProfileListRow(
-                            title: NSLocalizedString("Profile.favorites", comment: ""),
-                            count: profile.likesCount
-                        )
-                    }
-                    .listRowSeparator(.hidden)
+                    ProfileListRow(
+                        title: NSLocalizedString("Profile.myNFTs", comment: ""),
+                        count: profile.nftsCount
+                    )
                 }
+                .listRowSeparator(.hidden)
+                
+                // 2. Кнопка "Избранные NFT"
+                ZStack(alignment: .leading) {
+                    NavigationLink(destination:
+                                    FavoriteNFTsView(
+                                        viewModel: FavoriteNFTsViewModel(
+                                            profile: profile,
+                                            nftService: servicesAssembly.nftService,
+                                            profileService: servicesAssembly.profileService,
+                                            onProfileUpdate: { updatedProfile in
+                                                viewModel.profile = updatedProfile
+                                            }
+                                        )
+                                    )
+                    ) {
+                        EmptyView()
+                    }
+                    .opacity(0)
+                    
+                    ProfileListRow(
+                        title: NSLocalizedString("Profile.favorites", comment: ""),
+                        count: profile.likesCount
+                    )
+                }
+                .listRowSeparator(.hidden)
             }
-            .listStyle(.plain)
         }
+        .listStyle(.plain)
+    }
     
     private var editButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
