@@ -26,9 +26,9 @@ struct PaymentSuccessView: View {
             onClose()
         }
         .font(.bodyBold)
-        .foregroundColor(.white)
+        .foregroundColor(.ypWhite)
         .frame(maxWidth: .infinity, minHeight: 60)
-        .background(Color.black)
+        .background(.ypBlack)
         .cornerRadius(16)
         .padding(.horizontal, 16)
         .padding(.bottom, 16)
