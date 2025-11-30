@@ -88,7 +88,7 @@ struct CartListView: View {
             } label: {
                 Text("К оплате")
                     .font(.bodyBold)
-                    .foregroundColor(.white)
+                    .foregroundColor(.ypWhite)
                     .frame(maxWidth: .infinity, minHeight: 44)
                     .background(.ypBlack)
                     .cornerRadius(16)

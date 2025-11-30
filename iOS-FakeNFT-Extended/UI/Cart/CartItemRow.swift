@@ -4,6 +4,7 @@ import Kingfisher
 struct CartItemRow: View {
     let item: NFTItem
     let onDelete: () -> Void
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack {
@@ -24,7 +25,7 @@ struct CartItemRow: View {
             Spacer()
             
             Button(action: onDelete) {
-                Image(.cartTrash)
+                Image(colorScheme == .dark ? .cartTrashDark : .cartTrash)
                     .foregroundColor(.red)
                     .font(.title2)
             }
