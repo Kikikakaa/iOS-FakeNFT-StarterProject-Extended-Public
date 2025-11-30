@@ -34,13 +34,9 @@ actor DefaultNetworkClient: NetworkClient {
 
     func send(request: NetworkRequest) async throws -> Data {
         let urlRequest = try create(request: request)
-        print("🌐 [NetworkClient] Отправка запроса: \(urlRequest.url?.absoluteString ?? "nil")")
-        print("🌐 [NetworkClient] Метод: \(urlRequest.httpMethod ?? "GET")")
-        print("🌐 [NetworkClient] Заголовки: \(urlRequest.allHTTPHeaderFields ?? [:])")
         
         let (data, response) = try await session.data(for: urlRequest)
         guard let response = response as? HTTPURLResponse else {
-            print("🌐 [NetworkClient] Ошибка: неверный ответ")
             throw NetworkClientError.urlSessionError
         }
         

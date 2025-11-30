@@ -26,9 +26,4 @@ final class ServicesAssembly {
         CatalogService(networkClient: networkClient)
     }
     
-    var profileService: ProfileService {
-        ProfileServiceImpl(
-            networkClient: networkClient
-        )
-    }
 }

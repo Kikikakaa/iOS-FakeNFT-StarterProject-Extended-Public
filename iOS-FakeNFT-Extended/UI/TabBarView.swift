@@ -25,7 +25,7 @@ struct TabBarView: View {
             }
             //Профиль
             NavigationStack {
-                ProfileView()
+                TestProfileView()
             }
             .tabItem {
                 Label(

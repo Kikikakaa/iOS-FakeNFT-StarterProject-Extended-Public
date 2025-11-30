@@ -21,11 +21,9 @@ final class MockCatalogService: CatalogServiceProtocol {
     
     func addToCart(nftId: String) async throws {
         try await Task.sleep(nanoseconds: 300_000_000)
-        print("Mock: Добавление NFT \(nftId) в корзину")
     }
     
     func removeFromCart(nftId: String) async throws {
         try await Task.sleep(nanoseconds: 300_000_000)
-        print("Mock: Удаление NFT \(nftId) из корзины")
     }
 }

@@ -111,8 +111,6 @@ final class CartViewModel: ObservableObject {
             self.errorMessage = nil
             
         } catch {
-            // важное — пробрасываем ошибку наружу
-            print("Clear cart error: \(error)")
             self.errorMessage = "Ошибка очистки корзины"
             throw error
         }
