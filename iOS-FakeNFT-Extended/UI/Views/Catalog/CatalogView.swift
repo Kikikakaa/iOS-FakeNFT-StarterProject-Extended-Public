@@ -9,10 +9,11 @@
 import SwiftUI
 
 struct CatalogView: View {
-    
+
     @StateObject private var viewModel: CatalogViewModel
     @State private var showingSortOptions = false
     @State private var path = NavigationPath()
+    @StateObject private var cartViewModel = CartViewModel.shared
 
     @MainActor
     init() {
@@ -33,27 +34,35 @@ struct CatalogView: View {
                     Button {
                         path.append(catalogCollectionItem)
                     } label: {
-                        CollectionRow(catalogCollectionItem: catalogCollectionItem)
+                        CollectionRow(
+                            catalogCollectionItem: catalogCollectionItem
+                        )
                     }
                     .buttonStyle(.plain)
                     .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                    .listRowInsets(
+                        EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
+                    )
                     .listRowBackground(Color.clear)
                 }
                 .listStyle(.plain)
                 .refreshable {
                     await viewModel.loadCollections()
                 }
-                
+
                 // Индикатор загрузки поверх контента
                 if viewModel.isLoading && viewModel.sortedCollections.isEmpty {
                     ProgressView()
                         .scaleEffect(1.5)
                 }
             }
-            .navigationDestination(for: CatalogCollectionItem.self) { catalogCollectionItem in
-                CollectionDetailView(catalogCollectionItem: catalogCollectionItem)
-                    .toolbar(.hidden, for: .tabBar)
+            .navigationDestination(for: CatalogCollectionItem.self) {
+                catalogCollectionItem in
+                CollectionDetailView(
+                    catalogCollectionItem: catalogCollectionItem,
+                    cartViewModel: cartViewModel
+                )
+                .toolbar(.hidden, for: .tabBar)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -64,15 +73,22 @@ struct CatalogView: View {
                     }
                 }
             }
-            .confirmationDialog("Сортировка", isPresented: $showingSortOptions) {
-                Button("По названию") { viewModel.sortOption = CatalogViewModel.SortOption.byName }
-                Button("По количеству NFT") { viewModel.sortOption = CatalogViewModel.SortOption.byCount }
-                Button("Отмена", role: .cancel) { }
+            .confirmationDialog("Сортировка", isPresented: $showingSortOptions)
+            {
+                Button("По названию") {
+                    viewModel.sortOption = CatalogViewModel.SortOption.byName
+                }
+                Button("По количеству NFT") {
+                    viewModel.sortOption = CatalogViewModel.SortOption.byCount
+                }
+                Button("Отмена", role: .cancel) {}
             } message: {
                 Text("Сортировка")
             }
             .task {
-                await viewModel.loadCollections()
+                if viewModel.collections.isEmpty {
+                    await viewModel.loadCollections()
+                }
             }
         }
     }

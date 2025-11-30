@@ -6,6 +6,7 @@ import SwiftUI
 
 struct NFTGridView: View {
     let nfts: [Nft]
+    @ObservedObject var cartViewModel: CartViewModel
     
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -16,7 +17,7 @@ struct NFTGridView: View {
     var body: some View {
         LazyVGrid(columns: columns, spacing: 16) {
             ForEach(nfts, id: \.guaranteedUniqueId) { nft in
-                NFTGridCell(nft: nft)
+                NFTGridCell(nft: nft, cartViewModel: cartViewModel)
             }
         }
     }
@@ -49,7 +50,8 @@ struct NFTGridView_Previews: PreviewProvider {
                 price: 4.0,
                 author: "Иван Петров"
             )
-        ])
+        ],
+                    cartViewModel: CartViewModel.shared)
         .padding()
     }
 }

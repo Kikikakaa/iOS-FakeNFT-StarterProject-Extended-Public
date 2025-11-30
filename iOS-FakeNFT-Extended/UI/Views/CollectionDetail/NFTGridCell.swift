@@ -6,8 +6,20 @@ import SwiftUI
 
 struct NFTGridCell: View {
     let nft: Nft
-    @State private var isLiked = false
-
+    @ObservedObject var cartViewModel: CartViewModel
+    @StateObject private var favoritesService = FavoritesService()
+    @State private var isProcessing = false
+    @State private var cartIconName: String = "trash"
+    
+    init(nft: Nft, cartViewModel: CartViewModel) {
+        self.nft = nft
+        self._cartViewModel = ObservedObject(wrappedValue: cartViewModel)
+    }
+    
+    private var isLiked: Bool {
+        favoritesService.isFavorite(nft.id)
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // Блок с изображением и лайком
@@ -41,9 +53,9 @@ struct NFTGridCell: View {
                         cornerRadius: AppConstants.NFTGridCell.cornerRadius
                     )
                 )
-
+                
                 Button(action: {
-                    isLiked.toggle()
+                    handleLikeButtonTap()
                 }) {
                     ZStack {
                         // Прозрачный квадрат для тапа 42x42
@@ -52,14 +64,14 @@ struct NFTGridCell: View {
                             .frame(width: 42, height: 42)
                         
                         // Картинка лайка по центру
-                        Image(isLiked ? .active : .noActive)
+                        Image(isLiked ? .active : .noActiveLike)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 42, height: 42)
                     }
                 }
             }
-
+            
             // Рейтинг (звездочки из ассетов)
             HStack(spacing: 2) {
                 ForEach(1...5, id: \.self) { star in
@@ -72,7 +84,7 @@ struct NFTGridCell: View {
                         )
                 }
             }
-
+            
             ZStack {
                 Rectangle()
                     .fill(Color.clear)
@@ -80,7 +92,7 @@ struct NFTGridCell: View {
                         width: AppConstants.NFTGridCell.infoBlockSize.width,
                         height: AppConstants.NFTGridCell.infoBlockSize.height
                     )
-
+                
                 HStack(alignment: .center, spacing: 0) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(nft.name)
@@ -93,7 +105,7 @@ struct NFTGridCell: View {
                             )
                             .foregroundColor(.primary)
                             .lineLimit(1)
-
+                        
                         Text("\(nft.price, specifier: "%.2f") ETH")
                             .font(
                                 .system(
@@ -104,18 +116,17 @@ struct NFTGridCell: View {
                             )
                             .foregroundColor(.primary)
                     }
-
+                    
                     Spacer()
-
+                    
                     Button(action: {
-                        print("Добавить в корзину: \(nft.name)")
+                        handleCartButtonTap()
                     }) {
-                        Image(.trash)
-                            .font(
-                                .system(size: AppConstants.NFTGridCell.iconSize)
-                            )
-                            .foregroundColor(.primary)
+                        // Меняем иконку в зависимости от состояния
+                        Image(cartViewModel.isInCart(nft.id) ? .trashX : .trash)
+                            .resizable()
                             .frame(width: 24, height: 24)
+                            .foregroundColor(.primary)
                     }
                 }
                 .padding(.horizontal, 4)
@@ -137,7 +148,66 @@ struct NFTGridCell: View {
             )
         )
         .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
+        .onAppear {
+            updateCartIcon()
+        }
+        .onChange(of: cartViewModel.cartItems) { _ in
+            updateCartIcon()
+        }
     }
+    
+    private func handleCartButtonTap() {
+        guard !isProcessing else { return }
+        
+        isProcessing = true
+        print("🎯 Кнопка нажата! NFT: \(nft.id)")
+        
+        Task {
+            defer {
+                DispatchQueue.main.async {
+                    isProcessing = false
+                    self.updateCartIcon()
+                }
+            }
+            
+            do {
+                if cartViewModel.isInCart(nft.id) {
+                    try await cartViewModel.removeFromCart(nft.id)
+                    print("✅ NFT удален из корзины")
+                } else {
+                    try await cartViewModel.addToCart(nft.id)
+                    print("✅ NFT добавлен в корзину")
+                }
+            } catch {
+                print("❌ Ошибка при работе с корзиной: \(error)")
+                
+                // Более детальная обработка ошибок
+                if let httpError = error as? URLError {
+                    switch httpError.code {
+                    case .badServerResponse:
+                        if let statusCode = (httpError.userInfo["NSErrorFailingURLKey"] as? HTTPURLResponse)?.statusCode {
+                            print("📊 HTTP статус: \(statusCode)")
+                            if statusCode == 403 {
+                                print("🚫 Ошибка доступа: проверьте токен авторизации")
+                            }
+                        }
+                    default:
+                        print("🌐 Сетевая ошибка: \(httpError.localizedDescription)")
+                    }
+                }
+            }
+        }
+    }
+    
+    private func updateCartIcon() {
+        cartIconName = cartViewModel.isInCart(nft.id) ? "trashX" : "trash"
+    }
+    
+    private func handleLikeButtonTap() {
+        print("❤️ Кнопка лайка нажата! NFT: \(nft.id)")
+        favoritesService.toggleFavorite(nft.id)
+    }
+    
 }
 
 struct NFTGridCell_Previews: PreviewProvider {
@@ -150,7 +220,7 @@ struct NFTGridCell_Previews: PreviewProvider {
                 rating: 4,
                 price: 1.5,
                 author: "Иван Петров"
-            )
+            ), cartViewModel: CartViewModel.shared
         )
         .previewLayout(.sizeThatFits)
         .padding()

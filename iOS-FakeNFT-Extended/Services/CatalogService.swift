@@ -57,4 +57,12 @@ final class CatalogService: CatalogServiceProtocol {
             website: websiteURL
         )
     }
+    
+    func addToCart(nftId: String) async throws {
+        try await CartViewModel.shared.addToCart(nftId)
+    }
+    
+    func removeFromCart(nftId: String) async throws {
+        try await CartViewModel.shared.removeFromCart(nftId)
+    }
 }

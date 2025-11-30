@@ -1,6 +1,7 @@
 //
 //  AuthorView.swift
 //  iOS-FakeNFT-Extended
+//  Сделал изменение для отражение ветки на Git
 
 import SwiftUI
 
