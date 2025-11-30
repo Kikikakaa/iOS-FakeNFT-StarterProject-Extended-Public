@@ -76,7 +76,9 @@ final class ProfileServiceImpl: ProfileService {
             description: result.description ?? "",
             websiteURL: URL(string: result.website ?? ""),
             nftsCount: "(\(result.nfts?.count ?? 0))",
-            likesCount: "(\(result.likes?.count ?? 0))"
+            likesCount: "(\(result.likes?.count ?? 0))",
+            nfts: result.nfts ?? [],
+            likes: result.likes ?? []
         )
     }
 }

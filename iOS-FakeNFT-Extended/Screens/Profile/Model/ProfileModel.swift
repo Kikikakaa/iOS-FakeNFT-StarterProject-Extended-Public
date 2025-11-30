@@ -7,4 +7,6 @@ struct ProfileModel {
     let websiteURL: URL?
     let nftsCount: String
     let likesCount: String
+    let nfts: [String] // Массив ID купленных NFT
+    let likes: [String] // Массив ID избранных NFT
 }

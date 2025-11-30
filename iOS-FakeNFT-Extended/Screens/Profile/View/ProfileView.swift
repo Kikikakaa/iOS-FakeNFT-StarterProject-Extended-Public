@@ -51,37 +51,61 @@ struct ProfileView: View {
     }
     
     private func listView(profile: ProfileModel) -> some View {
-        List {
-            Section {
-                ZStack(alignment: .leading) {
-                    NavigationLink(destination: Text(NSLocalizedString("Profile.myNFTs", comment: ""))) {
-                        EmptyView()
+            List {
+                Section {
+                    // --- Мои NFT ---
+                    ZStack(alignment: .leading) {
+                        NavigationLink(destination:
+                            MyNFTsView(
+                                viewModel: MyNFTsViewModel(
+                                    profile: profile,
+                                    nftService: servicesAssembly.nftService,
+                                    profileService: servicesAssembly.profileService,
+                                    onProfileUpdate: { updatedProfile in
+                                        viewModel.profile = updatedProfile
+                                    }
+                                )
+                            )
+                        ) {
+                            EmptyView()
+                        }
+                        .opacity(0)
+                        
+                        ProfileListRow(
+                            title: NSLocalizedString("Profile.myNFTs", comment: ""),
+                            count: profile.nftsCount
+                        )
                     }
-                    .opacity(0)
+                    .listRowSeparator(.hidden)
                     
-                    ProfileListRow(
-                        title: NSLocalizedString("Profile.myNFTs", comment: ""),
-                        count: profile.nftsCount
-                    )
-                }
-                .listRowSeparator(.hidden)
-                
-                ZStack(alignment: .leading) {
-                    NavigationLink(destination: Text(NSLocalizedString("Profile.favorites", comment: ""))) {
-                        EmptyView()
+                    // --- Избранные NFT ---
+                    ZStack(alignment: .leading) {
+                        NavigationLink(destination:
+                            FavoriteNFTsView(
+                                viewModel: FavoriteNFTsViewModel(
+                                    profile: profile,
+                                    nftService: servicesAssembly.nftService,
+                                    profileService: servicesAssembly.profileService,
+                                    onProfileUpdate: { updatedProfile in // <--- Ловим обновление
+                                        viewModel.profile = updatedProfile
+                                    }
+                                )
+                            )
+                        ) {
+                            EmptyView()
+                        }
+                        .opacity(0)
+                        
+                        ProfileListRow(
+                            title: NSLocalizedString("Profile.favorites", comment: ""),
+                            count: profile.likesCount
+                        )
                     }
-                    .opacity(0)
-                    
-                    ProfileListRow(
-                        title: NSLocalizedString("Profile.favorites", comment: ""),
-                        count: profile.likesCount
-                    )
+                    .listRowSeparator(.hidden)
                 }
-                .listRowSeparator(.hidden)
             }
+            .listStyle(.plain)
         }
-        .listStyle(.plain)
-    }
     
     private var editButton: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
