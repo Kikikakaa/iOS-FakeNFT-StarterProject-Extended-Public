@@ -38,7 +38,9 @@ final class ProfileViewModel: ObservableObject {
             description: newDescription,
             websiteURL: URL(string: newWebsite),
             nftsCount: currentProfile.nftsCount,
-            likesCount: currentProfile.likesCount
+            likesCount: currentProfile.likesCount,
+            nfts: currentProfile.nfts,
+            likes: currentProfile.likes
         )
         
         isLoading = true

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileHeaderView: View {
     let profile: ProfileModel
+    let onWebsiteTap: (URL) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -39,10 +40,14 @@ struct ProfileHeaderView: View {
                 }
                 
                 if let site = profile.websiteURL {
-                    Link(site.absoluteString, destination: site)
-                        .font(.system(size: 15, weight: .regular))
-                        .kerning(-0.24) // Letter spacing -0.24
-                        .tint(.blue)
+                    Button {
+                        onWebsiteTap(site)
+                    } label: {
+                        Text(site.absoluteString)
+                            .font(.system(size: 15, weight: .regular))
+                            .kerning(-0.24)
+                            .tint(.blue)
+                    }
                 }
             }
         }

@@ -69,7 +69,9 @@ final class ProfileEditViewModel: ObservableObject {
             description: description,
             websiteURL: URL(string: website),
             nftsCount: original.nftsCount,
-            likesCount: original.likesCount
+            likesCount: original.likesCount,
+            nfts: original.nfts,
+            likes: original.likes
         )
         
         do {
