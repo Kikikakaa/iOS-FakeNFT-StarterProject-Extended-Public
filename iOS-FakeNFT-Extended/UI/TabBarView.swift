@@ -15,7 +15,7 @@ struct TabBarView: View {
             }
             //Корзина
             NavigationStack {
-                CartListView()
+                TestCartListView()
             }
             .tabItem {
                 Label(

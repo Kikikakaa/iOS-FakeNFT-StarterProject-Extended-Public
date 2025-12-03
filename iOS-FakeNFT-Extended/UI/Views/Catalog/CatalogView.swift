@@ -108,15 +108,3 @@ struct CollectionDetailStubView: View {
         .padding()
     }
 }
-
-@MainActor
-struct CatalogView_Previews: PreviewProvider {
-    static var previews: some View {
-        let mockVM = CatalogViewModel(catalogService: MockCatalogService())
-        // Используем моковые данные из MockCatalogData
-        mockVM.collections = MockCatalogData.catalogCollections
-        mockVM.isLoading = false
-
-        return CatalogView(viewModel: mockVM)
-    }
-}
