@@ -5,66 +5,65 @@ final class FavoriteNFTsViewModel: ObservableObject {
     
     @Published var nfts: [Nft] = []
     @Published var isLoading: Bool = false
+    @Published var errorMessage: String?
     
-    private var profile: ProfileModel
     private let nftService: NftService
-    private let profileService: ProfileService
-    private let onProfileUpdate: (ProfileModel) -> Void
+    private let favoritesService: FavoritesServiceProtocol
     
-    init(
-            profile: ProfileModel,
-            nftService: NftService,
-            profileService: ProfileService,
-            onProfileUpdate: @escaping (ProfileModel) -> Void
-        ) {
-            self.profile = profile
-            self.nftService = nftService
-            self.profileService = profileService
-            self.onProfileUpdate = onProfileUpdate
-        }
+    init(nftService: NftService, favoritesService: FavoritesServiceProtocol = FavoritesService.shared) { // Используем shared
+        self.nftService = nftService
+        self.favoritesService = favoritesService
+        
+        print("🎯 FavoriteNFTsViewModel инициализирован")
+        print("📊 Имеется \(favoritesService.getFavoriteNFTs().count) избранных")
+        
+        // Подписываемся на изменения
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(favoritesDidChange),
+            name: .favoritesDidChange,
+            object: nil
+        )
+        
+        loadData()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     func loadData() {
         isLoading = true
+        errorMessage = nil
+        
         Task {
             do {
+                let favoriteIds = favoritesService.getFavoriteNFTs()
                 var loadedNfts: [Nft] = []
-                for id in profile.likes {
+                
+                for id in favoriteIds {
                     let nft = try await nftService.loadNft(id: id)
                     loadedNfts.append(nft)
                 }
+                
                 self.nfts = loadedNfts.sorted { $0.name < $1.name }
                 self.isLoading = false
             } catch {
-                print(error)
+                self.errorMessage = "Не удалось загрузить NFT"
                 self.isLoading = false
+                print("Ошибка загрузки избранных NFT: \(error)")
             }
         }
     }
     
     // Удаление из избранного
     func unlikeNft(nft: Nft) {
+        favoritesService.removeFromFavorites(nft.id)
         nfts.removeAll { $0.id == nft.id }
-        
-        // Обновляем модель профиля
-        var newLikes = profile.likes
-        newLikes.removeAll { $0 == nft.id }
-        
-        let updatedProfile = ProfileModel(
-            avatarURL: profile.avatarURL,
-            name: profile.name,
-            description: profile.description,
-            websiteURL: profile.websiteURL,
-            nftsCount: profile.nftsCount,
-            likesCount: "(\(newLikes.count))",
-            nfts: profile.nfts,
-            likes: newLikes
-        )
-        self.profile = updatedProfile
-        onProfileUpdate(updatedProfile)
-        
-        // Шлем на сервер
-        Task {
-            try? await profileService.updateProfile(model: updatedProfile)
-        }
+    }
+    
+    @objc private func favoritesDidChange() {
+        // Перезагружаем данные при изменении избранного
+        loadData()
     }
 }

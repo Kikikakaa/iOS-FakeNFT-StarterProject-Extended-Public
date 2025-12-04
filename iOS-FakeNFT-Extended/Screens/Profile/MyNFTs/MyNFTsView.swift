@@ -11,9 +11,17 @@ struct MyNFTsView: View {
         VStack {
             if viewModel.isLoading {
                 ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if viewModel.nfts.isEmpty {
-                Text("У Вас ещё нет NFT")
-                    .font(.system(size: 17, weight: .bold))
+                VStack(spacing: 12) {
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray)
+                    Text("У Вас ещё нет NFT")
+                        .font(.system(size: 17, weight: .bold))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 List(viewModel.nfts) { nft in
                     MyNftCell(
@@ -27,21 +35,23 @@ struct MyNFTsView: View {
                     .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 }
                 .listStyle(.plain)
+                .refreshable {
+                    // Можно добавить обновление по pull-to-refresh
+                    viewModel.loadData()
+                }
             }
         }
         .navigationTitle("Мои NFT")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
                     dismiss()
                 } label: {
-                    Image("Backward")
-                        .resizable()
-                        .renderingMode(.template)
-                        .scaledToFit()
-                        .frame(width: 16, height: 16)
-                        .foregroundStyle(Color(uiColor: .label))
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.blue)
                 }
             }
             
@@ -50,16 +60,14 @@ struct MyNFTsView: View {
                     // 2. Открываем меню по нажатию
                     showSortSheet = true
                 } label: {
-                    Image("Sort")
-                        .resizable()
-                        .renderingMode(.template)
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .foregroundStyle(Color(uiColor: .label))
+                    Image(systemName: "arrow.up.arrow.down")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.blue)
                 }
             }
         }
         .onAppear {
+            print("📱 MyNFTsView появился")
             viewModel.loadData()
         }
         // 3. Меню сортировки
@@ -73,7 +81,9 @@ struct MyNFTsView: View {
             Button("По названию") {
                 viewModel.sort(by: .name)
             }
-            Button("Закрыть", role: .cancel) {}
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Выберите способ сортировки")
         }
     }
 }

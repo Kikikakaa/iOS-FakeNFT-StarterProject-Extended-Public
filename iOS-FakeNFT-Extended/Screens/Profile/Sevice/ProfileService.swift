@@ -70,15 +70,18 @@ final class ProfileServiceImpl: ProfileService {
     }
     
     private func convertToModel(_ result: ProfileResult) -> ProfileModel {
+        let favoritesService = FavoritesService.shared
+        let favoriteIds = favoritesService.getFavoriteNFTs()
+        
         return ProfileModel(
             avatarURL: URL(string: result.avatar ?? ""),
             name: result.name,
             description: result.description ?? "",
             websiteURL: URL(string: result.website ?? ""),
             nftsCount: "(\(result.nfts?.count ?? 0))",
-            likesCount: "(\(result.likes?.count ?? 0))",
+            likesCount: "(\(favoriteIds.count))",
             nfts: result.nfts ?? [],
-            likes: result.likes ?? []
+            likes: favoriteIds
         )
     }
 }

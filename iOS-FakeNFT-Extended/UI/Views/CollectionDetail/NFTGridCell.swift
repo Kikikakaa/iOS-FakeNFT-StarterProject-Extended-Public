@@ -7,7 +7,7 @@ import SwiftUI
 struct NFTGridCell: View {
     let nft: Nft
     @ObservedObject var cartViewModel: CartViewModel
-    @StateObject private var favoritesService = FavoritesService()
+    @StateObject private var favoritesService = FavoritesService.shared
     @State private var isProcessing = false
     @State private var cartIconName: String = "trash"
     
@@ -206,6 +206,7 @@ struct NFTGridCell: View {
     private func handleLikeButtonTap() {
         print("❤️ Кнопка лайка нажата! NFT: \(nft.id)")
         favoritesService.toggleFavorite(nft.id)
+        NotificationCenter.default.post(name: .favoritesDidChange, object: nil)
     }
     
 }

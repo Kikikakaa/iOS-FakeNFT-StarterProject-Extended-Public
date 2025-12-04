@@ -13,9 +13,17 @@ struct FavoriteNFTsView: View {
         VStack {
             if viewModel.isLoading {
                 ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if viewModel.nfts.isEmpty {
-                Text("У Вас ещё нет избранных NFT")
-                    .font(.system(size: 17, weight: .bold))
+                VStack(spacing: 12) {
+                    Image(systemName: "heart.slash")
+                        .font(.system(size: 48))
+                        .foregroundColor(.gray)
+                    Text("У Вас ещё нет избранных NFT")
+                        .font(.system(size: 17, weight: .bold))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
@@ -33,18 +41,16 @@ struct FavoriteNFTsView: View {
             }
         }
         .navigationTitle("Избранные NFT")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
                     dismiss()
                 } label: {
-                    Image("Backward")
-                        .resizable()
-                        .renderingMode(.template)
-                        .scaledToFit()
-                        .frame(width: 16, height: 16)
-                        .foregroundStyle(Color(uiColor: .label))
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.blue)
                 }
             }
         }

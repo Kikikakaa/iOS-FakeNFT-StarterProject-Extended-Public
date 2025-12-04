@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @StateObject private var favoritesService = FavoritesService.shared
     @StateObject private var viewModel = ProfileViewModel()
     @Environment(ServicesAssembly.self) private var servicesAssembly
+    @State private var favoritesCount = "(0)"
     
     // Состояния навигации
     @State private var isShowingEditSheet = false
@@ -43,6 +45,15 @@ struct ProfileView: View {
         }
         .onAppear {
             viewModel.loadProfile(service: servicesAssembly.profileService)
+            updateFavoritesCount()
+        }
+        .onReceive(favoritesService.$favorites) { newFavorites in
+            // Реагируем на изменения в сервисе
+            updateFavoritesCount()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .favoritesDidChange)) { _ in
+            // Дублирующая подписка для гарантии
+            updateFavoritesCount()
         }
         .fullScreenCover(isPresented: $isShowingEditSheet) {
             ProfileEditView(
@@ -104,12 +115,7 @@ struct ProfileView: View {
                     NavigationLink(destination:
                                     FavoriteNFTsView(
                                         viewModel: FavoriteNFTsViewModel(
-                                            profile: profile,
-                                            nftService: servicesAssembly.nftService,
-                                            profileService: servicesAssembly.profileService,
-                                            onProfileUpdate: { updatedProfile in
-                                                viewModel.profile = updatedProfile
-                                            }
+                                            nftService: servicesAssembly.nftService
                                         )
                                     )
                     ) {
@@ -119,13 +125,16 @@ struct ProfileView: View {
                     
                     ProfileListRow(
                         title: NSLocalizedString("Profile.favorites", comment: ""),
-                        count: profile.likesCount
+                        count: favoritesCount
                     )
                 }
                 .listRowSeparator(.hidden)
             }
         }
         .listStyle(.plain)
+        .onAppear {
+            updateFavoritesCount()
+        }
     }
     
     private var editButton: some ToolbarContent {
@@ -138,4 +147,13 @@ struct ProfileView: View {
             }
         }
     }
+    
+    private func updateFavoritesCount() {
+        let count = favoritesService.getFavoriteNFTs().count
+        favoritesCount = "(\(count))"
+    }
+}
+
+extension Notification.Name {
+    static let favoritesDidChange = Notification.Name("favoritesDidChange")
 }
