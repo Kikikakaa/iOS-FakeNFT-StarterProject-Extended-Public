@@ -1,4 +1,10 @@
+"Profile.title" = "Профиль";
+"Profile.myNFTs" = "Мои NFT";
+"Profile.favorites" = "Избранные NFT";
+"Profile.about" = "О разработчике";
 "Tab.catalog" = "Каталог";
+"Tab.profile" = "Профиль";
+"Profile.about" = "О разработчике";
 "Tab.cart" = "Корзина";
 "Catalog.openNft" = "Открыть Nft";
 "Error.network" = "Произошла ошибка сети";
