@@ -29,7 +29,7 @@ struct MyNftCell: View {
                 Button {
                     onLikeToggle()
                 } label: {
-                    Image(isLiked ? "Active" : "No Active")
+                    Image(isLiked ? .active : .noActiveLike)
                         .resizable()
                         .frame(width: 18, height: 16)
                 }
