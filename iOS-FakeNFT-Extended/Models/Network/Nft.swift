@@ -20,3 +20,4 @@ struct Nft: Codable, Identifiable, Hashable {
         hasher.combine(id)
     }
 }
+

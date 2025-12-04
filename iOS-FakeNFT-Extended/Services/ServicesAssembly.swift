@@ -27,4 +27,8 @@ final class ServicesAssembly {
             networkClient: networkClient
         )
     }
+
+    var catalogService: CatalogServiceProtocol {
+        CatalogService(networkClient: networkClient)
+    }
 }

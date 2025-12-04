@@ -16,7 +16,7 @@ final class CartViewModel: ObservableObject {
     }
 
     static let shared = CartViewModel()
-    let client = DefaultNetworkClient()
+    let client = DefaultNetworkClient() // Убрал private для доступности в ext
     private let orderId = "1"
 
     init() {
@@ -111,8 +111,6 @@ final class CartViewModel: ObservableObject {
             self.errorMessage = nil
             
         } catch {
-            // важное — пробрасываем ошибку наружу
-            print("Clear cart error: \(error)")
             self.errorMessage = "Ошибка очистки корзины"
             throw error
         }

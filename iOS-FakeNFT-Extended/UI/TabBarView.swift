@@ -14,13 +14,16 @@ struct TabBarView: View {
                 }
                 .backgroundStyle(.background)
 
-            TestCatalogView()
-                .tabItem {
-                    Label(
-                        NSLocalizedString("Tab.catalog", comment: ""),
-                        systemImage: "square.stack.3d.up.fill"
-                    )
-                }
+            NavigationStack {
+                CatalogView()
+            }
+            .tabItem {
+                Label(
+                    NSLocalizedString("Tab.catalog", comment: ""),
+                    systemImage: "square.stack.3d.up.fill"
+                )
+            }
+            
             NavigationStack {
                 CartListView()
             }

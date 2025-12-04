@@ -18,10 +18,11 @@ protocol CustomURLRequestProvider {
 }
 
 actor DefaultNetworkClient: NetworkClient {
-    private let session: URLSession
-    private let decoder: JSONDecoder
-    private let encoder: JSONEncoder
-    
+
+    let session: URLSession
+    let decoder: JSONDecoder
+    let encoder: JSONEncoder
+
     init(
         session: URLSession = URLSession.shared,
         decoder: JSONDecoder = JSONDecoder(),
@@ -34,10 +35,12 @@ actor DefaultNetworkClient: NetworkClient {
     
     func send(request: NetworkRequest) async throws -> Data {
         let urlRequest = try create(request: request)
+        
         let (data, response) = try await session.data(for: urlRequest)
         guard let response = response as? HTTPURLResponse else {
             throw NetworkClientError.urlSessionError
         }
+        
         guard 200 ..< 300 ~= response.statusCode else {
             throw NetworkClientError.httpStatusCode(response.statusCode)
         }
