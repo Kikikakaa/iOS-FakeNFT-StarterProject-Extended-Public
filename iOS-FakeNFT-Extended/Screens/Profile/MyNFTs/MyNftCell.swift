@@ -31,12 +31,10 @@ struct MyNftCell: View {
                 } label: {
                     Image(isLiked ? .active : .noActiveLike)
                         .resizable()
-                        .frame(width: 18, height: 16)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 42, height: 42)
                 }
                 .buttonStyle(PlainButtonStyle())
-                // Отступы от краев картинки
-                .padding(.top, 13)
-                .padding(.trailing, 12)
             }
             
             VStack(alignment: .leading, spacing: 4) {

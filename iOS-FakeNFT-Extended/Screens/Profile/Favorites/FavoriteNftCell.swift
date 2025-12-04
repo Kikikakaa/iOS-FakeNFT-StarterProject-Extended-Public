@@ -32,9 +32,9 @@ struct FavoriteNftCell: View {
                 } label: {
                     Image("Active")
                         .resizable()
-                        .frame(width: 21, height: 18)
+                        .frame(width: 42, height: 42)
                 }
-                .padding([.top, .trailing], 6)
+                .padding([.top, .trailing], -6)
             }
             
             // 2. Инфо (Справа)
