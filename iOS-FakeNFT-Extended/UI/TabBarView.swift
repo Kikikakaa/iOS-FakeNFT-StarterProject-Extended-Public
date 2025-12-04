@@ -3,7 +3,6 @@ import SwiftUI
 struct TabBarView: View {
     var body: some View {
         TabView {
-            //Каталог
             NavigationStack {
                 CatalogView()
             }
@@ -13,7 +12,6 @@ struct TabBarView: View {
                     systemImage: "square.stack.3d.up.fill"
                 )
             }
-            //Корзина
             NavigationStack {
                 TestCartListView()
             }
@@ -23,7 +21,6 @@ struct TabBarView: View {
                     systemImage: "basket"
                 )
             }
-            //Профиль
             NavigationStack {
                 TestProfileView()
             }
