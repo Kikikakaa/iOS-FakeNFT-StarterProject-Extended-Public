@@ -13,6 +13,10 @@ protocol NetworkClient {
     func send<T: Decodable>(request: NetworkRequest) async throws -> T
 }
 
+protocol CustomURLRequestProvider {
+    func asURLRequest() throws -> URLRequest
+}
+
 actor DefaultNetworkClient: NetworkClient {
     private let session: URLSession
     private let decoder: JSONDecoder
@@ -48,6 +52,11 @@ actor DefaultNetworkClient: NetworkClient {
     // MARK: - Private
     
     private func create(request: NetworkRequest) throws -> URLRequest {
+
+        if let custom = request as? (any CustomURLRequestProvider) {
+            return try custom.asURLRequest()
+        }
+
         guard let endpoint = request.endpoint else {
             throw NetworkClientError.incorrectRequest("Empty endpoint")
         }
@@ -60,6 +69,7 @@ actor DefaultNetworkClient: NetworkClient {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
         }
+
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
         
         return urlRequest
